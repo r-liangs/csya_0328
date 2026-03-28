@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSYA Aircraft Systems Quiz</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2333;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --danger: #f85149;
+    --warning: #d29922;
+    --text: #e6edf3;
+    --text-muted: #7d8590;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  header .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    max-width: 760px;
+    margin: 0 auto 28px;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 8px;
+  }
+
+  .progress-bar-outer {
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar-inner {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    max-width: 760px;
+    margin: 0 auto 28px;
+  }
+
+  .stat-box {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    text-align: center;
+  }
+
+  .stat-box .val {
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .stat-box .lbl {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  .stat-box.correct .val { color: var(--accent2); }
+  .stat-box.wrong .val   { color: var(--danger); }
+  .stat-box.remain .val  { color: var(--accent); }
+
+  /* Question card */
+  .card {
+    max-width: 760px;
+    margin: 0 auto 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    animation: fadeUp 0.3s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .q-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.25);
+    border-radius: 6px;
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+
+  .q-text {
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .options {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    background: transparent;
+    text-align: left;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .opt:hover:not(:disabled) {
+    background: rgba(88,166,255,0.07);
+    border-color: var(--accent);
+  }
+
+  .opt-letter {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: var(--surface2);
+    border-radius: 5px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .opt.correct-ans {
+    background: rgba(63,185,80,0.1);
+    border-color: var(--accent2);
+  }
+  .opt.correct-ans .opt-letter {
+    background: var(--accent2);
+    color: #000;
+  }
+
+  .opt.wrong-ans {
+    background: rgba(248,81,73,0.08);
+    border-color: var(--danger);
+  }
+  .opt.wrong-ans .opt-letter {
+    background: var(--danger);
+    color: #fff;
+  }
+
+  .opt.revealed-correct {
+    background: rgba(63,185,80,0.06);
+    border-color: rgba(63,185,80,0.4);
+  }
+  .opt.revealed-correct .opt-letter {
+    background: rgba(63,185,80,0.3);
+    color: var(--accent2);
+  }
+
+  .opt:disabled { cursor: default; }
+
+  /* Feedback strip */
+  .feedback {
+    margin: 0 20px 16px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .feedback.show { opacity: 1; }
+  .feedback.ok  { background: rgba(63,185,80,0.1);  color: var(--accent2); border: 1px solid rgba(63,185,80,0.3); }
+  .feedback.bad { background: rgba(248,81,73,0.08); color: var(--danger);  border: 1px solid rgba(248,81,73,0.3); }
+
+  /* Controls */
+  .controls {
+    max-width: 760px;
+    margin: 0 auto 24px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+  }
+
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Mode switch */
+  .mode-bar {
+    max-width: 760px;
+    margin: 0 auto 20px;
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .mode-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted);
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .mode-btn.active {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  /* Results overlay */
+  #results {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 40px 32px;
+  }
+
+  #results h2 {
+    font-family: 'Space Mono', monospace;
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  #results .score-big {
+    font-family: 'Space Mono', monospace;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 16px 0;
+  }
+
+  #results .score-big.pass { color: var(--accent2); }
+  #results .score-big.fail { color: var(--danger); }
+
+  #results p { color: var(--text-muted); font-size: 14px; }
+
+  .filter-row {
+    max-width: 760px;
+    margin: 0 auto 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .filter-row span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 7px;
+    padding: 6px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 500px) {
+    .stats-row { flex-direction: column; }
+    .card-header { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">CPL Theory · Aircraft Systems</div>
+  <h1>CSYA Question Bank</h1>
+  <p>79 questions · Select an answer to check immediately</p>
+</header>
+
+<div class="mode-bar">
+  <button class="mode-btn active" onclick="setMode('all')">All Questions</button>
+  <button class="mode-btn" onclick="setMode('shuffle')">Shuffled</button>
+  <button class="mode-btn" onclick="setMode('wrong')">Wrong Only</button>
+</div>
+
+<div class="filter-row">
+  <span>JUMP TO</span>
+  <select id="jumpSelect" onchange="jumpTo(this.value)">
+    <option value="">— Q# —</option>
+  </select>
+  <span style="margin-left:auto; font-size:11px; color:var(--text-muted)" id="modeLabel">Mode: All Questions</span>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-meta">
+    <span id="progText">0 / 79 answered</span>
+    <span id="progPct">0%</span>
+  </div>
+  <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar" style="width:0%"></div></div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-box correct"><div class="val" id="statCorrect">0</div><div class="lbl">Correct</div></div>
+  <div class="stat-box wrong"><div class="val" id="statWrong">0</div><div class="lbl">Wrong</div></div>
+  <div class="stat-box remain"><div class="val" id="statRemain">79</div><div class="lbl">Remaining</div></div>
+</div>
+
+<div class="controls">
+  <button class="btn btn-primary" onclick="resetQuiz()">↺ Reset</button>
+  <button class="btn btn-ghost" onclick="showResults()">📊 Results</button>
+</div>
+
+<div id="quizArea"></div>
+<div id="results">
+  <div class="tag" style="margin-bottom:8px">FINAL SCORE</div>
+  <h2 id="resTitle"></h2>
+  <div class="score-big" id="resPct"></div>
+  <p id="resDetail"></p>
+  <br>
+  <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:12px">Try Again</button>
+</div>
+
+<script>
+const RAW = [
+  {q:"What are Hydraulic thermal relief valves designed to accomplish?",opts:["control hydraulic pump fluid temperatures","redirect fluid flow from overheated brakes","keep the reservoir fluid temperature in limits","relieve excessive pressures due to thermal expansion"],ans:"d"},
+  {q:"Pitting of the contact breaker points in a magneto is an indication of:",opts:["faulty ignition timing","earthing of the plug leads","faulty condenser","use of incorrect fuel grade"],ans:"c"},
+  {q:"An aircraft that uses 100 octane fuel lands at an en-route airfield where only 80 octane fuel is available",opts:["the aircraft cannot refuel until 100 octane fuel is available","80 Octane can be used provided the duration of flight with low octane fuel is recorded in the maintenance release","refuel with the minimum amount of 80 Octane fuel necessary and continue the flight using lower power settings","the aircraft can refuel and proceed normally"],ans:"a"},
+  {q:"If the oil filter on an aeroplane engine becomes blocked, the oil is then:",opts:["Fed to a metering jet.","Regulated by the pressure relief valve.","Forced through a bypass valve","Returned immediately to the oil tank"],ans:"c"},
+  {q:"During a glide at idle power and constant IAS, if the RPM lever of a constant speed propeller is pushed fully forward from its normal cruise position, what will the effect be on the propeller pitch and rate of descent?",opts:["Pitch will Decrease and the rate of descent will decrease.","Pitch will Increase and the rate of descent will decrease","Pitch will Increase and the rate of descent will increase.","Pitch will Decrease and the rate of descent will increase."],ans:"d"},
+  {q:"On most types of aircraft electrical safety systems designed to prevent inadvertent retraction of the undercarriage on the ground, are activated by which of the following?",opts:["A combination of throttle and flap position","The aeroplane's weight on at least one of the main wheels","The aeroplane's weight on the nose wheel","The aeroplane's taxi speed"],ans:"b"},
+  {q:"The effect of ice formation in the carburettor is more severe at?",opts:["rich mixture settings","idle power settings","high altitudes","cruise power settings"],ans:"b"},
+  {q:"In an aircraft fitted with a CSU to maintain a constant MP when climbing it is necessary to",opts:["gradually close the throttle","coarsen the propeller pitch to reduce engine speed and compensate by opening the throttle","gradually open the throttle","have the same prop and throttle settings all the way forward"],ans:"c"},
+  {q:"When the centrifugal force acting on the propeller governor flyweights overcomes the tension on the speeder spring, a propeller is in what speed condition?",opts:["Under-speed.","Feather","Over-speed.","On-speed."],ans:"c"},
+  {q:"A turbocharged engine's wastegate will be fully closed:",opts:["Well above the Critical Altitude","At the Critical Altitude.","Well below Critical Altitude.","Above the Critical Altitude."],ans:"b"},
+  {q:"The fuel metering force of a conventional float-type carburetor in its normal operating range is the difference between the pressure acting on the discharge nozzle located within the venturi and the",opts:["pressure of the air as it enters the venturi (impact pressure).","Ram air pressure","atmospheric pressure acting on the fuel in the float chamber.","pressure of the fuel as it enters the carburetor."],ans:"c"},
+  {q:"What is the advantage of Capacitive fire wire detectors over the Resistive variety?",opts:["they do not give a spurious fire warning when accidentally short-circuited.","they are longer","they are more sensitive to temperature change.","they do not require an external electrical supply"],ans:"a"},
+  {q:"In an aeroplane equipped with a manifold pressure gauge, a tachometer, a cylinder head temperature gauge, and an exhaust-gas temperature indicator, the first indication of induction icing will be noted by a decrease in:",opts:["manifold pressure","rpm.","exhaust-gas temperature.","cylinder head temperature."],ans:"a"},
+  {q:"A single acting propeller (standard type) on a single engine aircraft loses oil pressure during cruise flight. The effect on the propeller will be:",opts:["No movement of the blades","Movement of the blades to coarse pitch","Movement of the blades to reverse pitch","Movement of the blades to fine pitch"],ans:"d"},
+  {q:"A single acting propeller (counter weight type) loses CSU oil pressure during cruise flight. What would the effect on the propeller be?",opts:["Movement of the blades to reverse pitch.","No movement of the blades.","Movement of the blades to coarse pitch.","Movement of the blades to fine pitch."],ans:"c"},
+  {q:"When establishing a climb after take-off, the proper sequence of engine control adjustment with a constant-speed unit is:",opts:["manifold pressure followed by rpm.","rpm, mixture, and then manifold pressure.","manifold pressure and mixture but not the rpm.","mixture, followed by rpm and then manifold pressure."],ans:"a"},
+  {q:"Which of the following best describes the blade movement of a full-feathering, constant-speed propeller that is in the LOW RPM position when the feathering action is begun?",opts:["Low pitch directly to feather position.","High pitch directly to feather position.","Low pitch through high pitch to feather position.","High pitch through low pitch to feather position."],ans:"b"},
+  {q:"The undercarriage warning horn in a retractable undercarriage system may be activated by which of the following?",opts:["the air speed indicator","the position of the throttle lever","the position of the elevator trim","a squat switch located on the aircrafts nose wheel"],ans:"b"},
+  {q:"The technique that an engine uses to tolerate and produce an Inlet Manifold Pressure beyond that which is available at Sea Level is known as:",opts:["Take Off Boosting","Ground Boosting","Altitude Boosting or Normalising","Reserve power"],ans:"b"},
+  {q:"The property of gyroscopic precession is the basis of operation of the",opts:["artificial horizon","direction indicator","vertical speed indicator","turn and balance indicator"],ans:"d"},
+  {q:"When compared with a normally aspirated engine, a turbocharged engine is:",opts:["less likely to suffer from detonation.","more likely to experience spark plug fouling","more likely to experience detonation.","more susceptible to pre-ignition."],ans:"c"},
+  {q:"The duration of each stroke of a 4-stroke cycle engine is equivalent to",opts:["Half a revolution so long as there are only 4 cylinders","180 degrees of crankshaft rotation or half a revolution","720 degrees of crankshaft rotation","360 degrees of crankshaft rotation"],ans:"b"},
+  {q:"The rate at which the engine converts heat energy to mechanical energy:",opts:["is the friction horsepower","is the indicated horsepower or torque","is the indicated horsepower","is the torque"],ans:"c"},
+  {q:"The purpose of an intercooler when used with a turbocharger is to cool the:",opts:["exhaust gases before they come in contact with the turbo drive.","air entering the cylinders from the turbocharger.","turbocharger bearings.","Wastegate Assembly"],ans:"b"},
+  {q:"The pilot would normally stop the engine by:",opts:["closing the throttle.","turning the fuel selector to OFF.","setting Idle Cut Off on the mixture control.","turning the ignition to OFF"],ans:"c"},
+  {q:"If the manifold pressure is increased, what effect would it have on the blade angle of a constant speed propeller?",opts:["Blade Angle will remain the same","Blade Angle will increase and after a short time will reduce.","Blade Angle will increase.","Blade Angle will reduce so that the engine rpm can increase"],ans:"c"},
+  {q:"What pressure does a Manifold Absolute Pressure gauge (MAP) display?",opts:["Pressure in the Induction Manifold upstream of the Inlet Valve; downstream of the Throttle","Ambient static pressure in Inches of Mercury.","The total pressure of air in the Induction Manifold upstream of the Throttle Valve","Carburettor inlet air pressure"],ans:"a"},
+  {q:"Why should Ashless Dispersant (AD) oil not be used in a newly overhauled piston engine?",opts:["Higher temperatures are generated in a newly overhauled engine & this could cause a deterioration of the lubricating qualities of AD oil","Straight mineral oil is cheaper than AD oil.","AD oil has such good lubricating characteristics that it will not allow enough wear to properly seat the Piston Rings with the cylinder walls","AD is subject to oxidisation & this can lead to sludge formation"],ans:"c"},
+  {q:"What is the design feature which ensures positive locking of the undercarriage in the down position?",opts:["over-centre locks and springs","mechanical safety down-lock","a drag strut","sequence valves and priority valves"],ans:"a"},
+  {q:"What would be the result of an exhaust leak Upstream of (before) the Wastegate in a Turbocharged engine?",opts:["MAP obtained at any given altitude & Throttle position decreases","Fuel consumption would increase","MAP obtained at any given altitude & Throttle position increases","Less power is available due to increased Exhaust back pressure"],ans:"a"},
+  {q:"Boost manifold pressure is generally considered to be any manifold pressure above:",opts:["29.92 'Hg","50\" Hg.","14.7\" Hg.","1013.25 hPa"],ans:"a"},
+  {q:"The spark is produced in a magneto ignition system when the breaker points are:",opts:["beginning to open.","fully closed.","fully open.","beginning to close"],ans:"a"},
+  {q:"The function of the contact breaker in the primary circuit of a magneto is to:",opts:["Prevent the build up of excess static charge","Assist in the collapse of the magnetic field created by the permanent magnet generator","Time the sparks to the spark plugs","Allow the magneto to be switched on and off"],ans:"b"},
+  {q:"As a result of the decreasing air density as an aircraft climbs, volumetric efficiency of a piston engine:",opts:["decreases with increasing altitude","increases with increasing altitude","remains steady as rpm increases","increases with decreasing density"],ans:"a"},
+  {q:"Resistance to motion in the plane of rotation of a propeller is called",opts:["torque","slippage","helix","thrust"],ans:"a"},
+  {q:"On a Centre Zero Ammeter, the reading is 0. To check if the Alternator is functioning what action should the pilot take",opts:["Switch on all Electronics","This is normal","Switch on all the Electronics and check for discharge","Switch off all the Electronics and check for a positive charge"],ans:"d"},
+  {q:"The term Brake Horsepower refers to:",opts:["the overall efficiency of an engine","power available at the prop shaft","the ratio of possible to actual horsepower","FHP + IHP expressed as a percentage"],ans:"b"},
+  {q:"During deceleration after a landing on runway 36 in the Southern Hemisphere, the magnetic compass will indicate:",opts:["An apparent turn to the North","an apparent turn to the south","a heading fluctuation about 360 degrees","No apparent turn"],ans:"d"},
+  {q:"What power supply is used to supply an aircraft instrument that operates on alternating current?",opts:["a transistor","an inverter","a transformer","an alternator that is mechanically driven by the engine"],ans:"b"},
+  {q:"Valve lead occurs when:",opts:["both inlet and exhaust valves are open at bottom dead centre.","the exhaust valve opens before the piston reaches BDC.","when both the inlet and exhaust valves are closed at the same time.","when both the inlet and exhaust valves are open at the same time."],ans:"b"},
+  {q:"When operating an aircraft equipped with a constant-speed propeller, and while maintaining a constant manifold pressure, the tendency of the engine to detonate will:",opts:["increase as the mixture is enriched.","decrease, with an increase in the temperature of the fuel/air mixture.","increase, with a decrease in rpm.","decrease, with a decrease in rpm."],ans:"c"},
+  {q:"On an Air Speed Indicator, which of the following speeds is not marked",opts:["VNE.","VNO.","VFE.","VLO."],ans:"d"},
+  {q:"If your aircraft static vents becomes blocked whilst on climb, then, if the power setting is not altered:",opts:["The ASI will over read.","A higher Pitch attitude will be required to maintain the desired climb IAS","The VSI will display an increasing rate of climb","The ASI will display an unchanged reading","A lower Pitch attitude will be required to maintain the desired climb IAS"],ans:"e"},
+  {q:"After starting a cold aircraft engine the oil pressure gauge should register:",opts:["Within 15 to 30 seconds; otherwise shut down the engine","By the time pre-flight checks are complete; otherwise shut down the engine","Immediately, otherwise shut down the engine","Immediately, otherwise, as long as the oil levels were at an adequate level before start-up, and RPM is within limits, it is probable that the oil pressure gauge is faulty and this should be reported after the flight"],ans:"a"},
+  {q:"What is an advantage Turn Coordinators have over Turn Indicators?",opts:["Turn Coordinators respond to movement of the aircraft in more than one axis","Turn Coordinators are more accurate","Turn Coordinators can't topple","Being electrically driven they are far more reliable"],ans:"a"},
+  {q:"During take-off, when maximum power and thrust are required, the constant-speed propeller should be set to a propeller blade angle which:",opts:["will produce a large angle of attack with respect to its relative wind.","will produce a small angle of attack with respect to its relative wind.","is high and will produce a low rpm.","will produce a low slipstream velocity."],ans:"b"},
+  {q:"What will happen if the oil cooler becomes blocked?",opts:["The circulation of oil through the engine will stop, leading to an engine failure.","The pressure bypass valve will allow the oil to bypass the cooler and continue to circulate.","The oil temperature will rise indicating a loss of oil.","The oil pressure relief valve will open."],ans:"b"},
+  {q:"How do cowl flaps aid in cooling a horizontally opposed aircraft engine?",opts:["Controls the amount of air flowing around the cylinders.","Directs air through the engine cylinders.","regulates the amount of air which acts on the radiator","Recirculates air through the engine cylinders."],ans:"a"},
+  {q:"Excessive priming of an engine before starting may result in which of the following?",opts:["Excessive wear on cylinder walls.","Severe overheating.","Pre-ignition","Backfiring"],ans:"a"},
+  {q:"During Pre Flight run up checks, carb heat should be applied and the result should be:",opts:["A temporary increase in RPM.","A temporary decrease in RPM.","A decrease in RPM for as long as Carb Heat is applied.","An increase in RPM for as long as Carb Heat is applied."],ans:"c"},
+  {q:"The CHT gauge continues to indicate engine temperature after engine shut down because:",opts:["It stores power in an internal capacitor","It does not need external power, it is a thermocouple device.","It gets its power from the battery.","It gets its power from the alternator during flight"],ans:"b"},
+  {q:"What is the correct procedure when the Autopilot is to be disengaged?",opts:["Aircraft should be in trim and the pilot should be firmly grasping the controls ready to assume manual control of the aircraft.","Pitch Trim should adjusted to reduce unexpected aircraft pitch changes.","Vacuum instrument system pressure should be at least 5.5 In/Hg.","The hydraulic supply for the autopilot should be disconnected."],ans:"a"},
+  {q:"Slipping in a turn may be caused by:",opts:["insufficient rudder","too much rudder","insufficient angle of bank","too much angle of bank"],ans:"d"},
+  {q:"An Accelerator Pump provides extra fuel for what purpose?",opts:["to ensure easy starting","to prevent a flat spot following rapid Throttle opening","to provide smooth acceleration of the engine during overtaking","to provide an extra rich mixture during take off"],ans:"b"},
+  {q:"During cruise you suspect that carburettor ice is forming and apply full carburettor heat. The engine immediately loses power and begins to run roughly. What should your immediate action be?",opts:["place carburettor heat to off","leave carburettor heat full on","close the throttle","open the throttle"],ans:"b"},
+  {q:"An accelerator pump in a carburettor is used to prevent a flat spot. A flat spot arises:",opts:["When the throttle is opened quickly and the mixture becomes temporarily too rich","When the throttle is closed and the mixture becomes temporarily too rich","When the throttle is closed quickly and the engine is starved of fuel","When the throttle is opened quickly and the mixture becomes temporarily too weak"],ans:"d"},
+  {q:"Use of Partial Carburettor heat is",opts:["not permitted","permitted if the POH approves the use of partial Carb Heat","only permitted when pilots are at the advanced stages of training","only permitted when the aircraft is fitted with a serviceable Carburettor Air Temperature Gauge"],ans:"d"},
+  {q:"The term valve lead describes:",opts:["the degrees of inlet valve opening before top dead centre","The point of ignition before top dead centre","exhaust valve degrees of closing after bottom dead centre","the amount of time both valves are open at BDC"],ans:"a"},
+  {q:"Which Flight instruments should be cross checked to facilitate Longitudinal control of an aircraft in level flight?",opts:["ASI, Artificial Horizon, Turn and Balance Indicator and Altimeter.","Altimeter, Directional Indicator, ASI, and Artificial Horizon.","Altimeter, ASI, Artificial Horizon, and VSI.","Directional Indicator, ASI, VSI and Altimeter."],ans:"c"},
+  {q:"If the gyro in a heading indicator has toppled, then when straight and level flight has been resumed, it could be expected to:",opts:["remain toppled and therefore unserviceable","re-erect itself and give correct indications.","re-erect itself and indicate an incorrect heading.","re-erect itself and indicate the heading at which it toppled"],ans:"c"},
+  {q:"During flight, the pilot notices the oil pressure is fluctuating between minimum and normal. The most likely cause and action would be:",opts:["Low oil quantity, requiring an immediate landing","The oil pump relief valve stuck closed, which should be reported","A faulty cooler thermostatic valve, which should be reported","A faulty instrument, thus no action required"],ans:"a"},
+  {q:"During normal running the maximum pressure in the cylinder occurs",opts:["about 120 degrees of crankshaft rotation after top dead centre","at top dead centre","at bottom dead centre","about 30 degrees of crankshaft rotation after top dead centre"],ans:"d"},
+  {q:"Why is it important to allow a suitable period of time to elapse prior to shutting down a turbocharged engine?",opts:["to avoid excessively low MAP's","to allow the 'Upper Deck' pressure to 'normalise'","to expunge all gases from the Induction Manifold","to ensure all rotating parts remain evenly lubricated"],ans:"d"},
+  {q:"Cylinder head temperatures are measured by means of an indicator and a",opts:["Electronic temperature sensing device","wheatstone bridge sensing device.","thermocouple sensing device.","resistance bulb sensing device."],ans:"c"},
+  {q:"When an aeroplane in the southern hemisphere is turning through north, the magnetic compass indication will be:",opts:["ahead of the actual aeroplane direction","Initially behind the actual aeroplane direction then changing to ahead of the actual aeroplane direction","behind the actual aeroplane direction.","the same as the actual aeroplane direction."],ans:"a"},
+  {q:"What is the purpose of the Hydraulic Reservoir in a Hydraulic system?",opts:["To provide extra pressure","To provide extra fluid to boost pressure","To provide a reserve of fluid to compensate for minor leaks.","None of these."],ans:"c"},
+  {q:"When Impact Ice forms on the engine air filter, select the correct statement:",opts:["it will always cause the engine to fail","it cannot be removed by carburettor heat","it isn't a serious problem","it occurs only above 10,000 feet"],ans:"b"},
+  {q:"On a float-type carburetor, the purpose of the economizer valve is to",opts:["provide extra fuel for sudden acceleration of the engine.","provide a lower fuel flow during cruise power settings","maintain the leanest mixture possible during cruising best power.","provide a richer mixture and cooling at maximum power output."],ans:"d"},
+  {q:"The pilot of a constant speed propeller type aircraft may suspect carburettor icing if:",opts:["The RPM is rising","The IAS and MAP is rising","The RPM is falling","The IAS and MAP is falling"],ans:"d"},
+  {q:"How is engine operation controlled on an engine equipped with a constant-speed propeller?",opts:["The throttle controls engine rpm as registered on the tachometer and the propeller control regulates the power output.","The throttle controls power output as registered on the manifold pressure gauge and the propeller control regulates constant blade angle.","The throttle controls engine rpm as registered on the tachometer and the mixture control regulates the power output.","the throttle controls power output as registered on the manifold pressure gauge and the propeller control regulates engine rpm."],ans:"d"},
+  {q:"What is the purpose of the ball in the Turn and Slip Indicator or Turn Coordinator?",opts:["The ball indicates slip or skid","The ball indicates angle of bank","The ball indicates rate of turn","The ball indicates rate of descent in a turn"],ans:"a"},
+  {q:"If your aircraft's engine driven fuel pump fails, will the Auxiliary Fuel Boost Pump be able to supply adequate fuel to the engine for flight operations anywhere in the envelope?",opts:["Maybe","Yes","No","It depends on the aircraft type"],ans:"b"},
+  {q:"Why does Exhaust Back Pressure reduce the power developed in the cylinder of a piston engine?",opts:["It reduces the Volumetric Efficiency","It reduces the Thermal Efficiency","It reduces the density of the Fuel/Air charge","It reduces the Compression Ratio"],ans:"a"},
+  {q:"The Yellow Band on a Carburetor Air Temperature gauge indicates the temperature range where the formation of ice is:",opts:["possible","unlikely","well advanced","about to start"],ans:"a"},
+  {q:"As a Turbocharged Aircraft climbs above Critical Altitude, what will happen to engine power output?",opts:["None of these","It begins to decrease at the same rate as it does for a normally aspirated engine","No additional power is available and the aircraft can only climb a few hundred feet higher","No additional power is available and the aircraft cannot climb any higher"],ans:"b"},
+  {q:"If fuel/air ratio is proper and ignition timing is correct, when should the combustion process be completed?",opts:["20 to 30 degrees before top center at the end of the compression stroke.","approximately 30 degrees after top centre at the beginning of the power stroke.","when the exhaust valve opens at the end of the power stroke."],ans:"b"},
+  {q:"The normal reading on a centre zero ammeter during flight should be",opts:["a discharge depending on the number of electrical loads turned on","zero","a charge indication which depends on the number of electrical loads turned on","a constant small charge"],ans:"d"},
+  {q:"What will happen to the propeller blade angle and the engine RPM if the tension on the propeller governor control spring (speeder spring) is increased?",opts:["Blade angle will decrease and RPM will decrease.","Blade angle will decrease and RPM will increase.","Blade angle will increase and RPM will increase.","Blade angle will increase and RPM will decrease."],ans:"b"},
+  {q:"What could be the result if the take-off manifold pressure exceeds rated boost in a turbo-charged engine?",opts:["detonation and engine damage could result","cylinder head temperatures will become too low and power will be less than normal","fuel vaporisation will occur","the engine will back-fire and lose power"],ans:"a"},
+];
+
+const LETTERS = ['a','b','c','d','e','f'];
+
+let questions = [];
+let userAnswers = {};
+let wrongSet = new Set();
+let mode = 'all';
+
+function buildQuestions() {
+  questions = mode === 'shuffle' ? [...RAW].sort(() => Math.random() - 0.5) :
+              mode === 'wrong'   ? RAW.filter((_,i) => wrongSet.has(i)) :
+              [...RAW];
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['all','shuffle','wrong'][i] === m);
+  });
+  document.getElementById('modeLabel').textContent =
+    'Mode: ' + (m==='all'?'All Questions': m==='shuffle'?'Shuffled':'Wrong Only');
+  resetQuiz(false);
+}
+
+function resetQuiz(hardReset = true) {
+  if (hardReset) { wrongSet.clear(); userAnswers = {}; }
+  buildQuestions();
+  userAnswers = {};
+  document.getElementById('results').style.display = 'none';
+  renderAll();
+  updateStats();
+}
+
+function jumpTo(val) {
+  if (!val) return;
+  const el = document.getElementById('q-' + val);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderAll() {
+  const area = document.getElementById('quizArea');
+  const jump = document.getElementById('jumpSelect');
+  area.innerHTML = '';
+  jump.innerHTML = '<option value="">— Q# —</option>';
+
+  questions.forEach((q, idx) => {
+    const realIdx = RAW.indexOf(q);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'q-' + idx;
+
+    const numLabel = `Q${realIdx+1}`;
+    jump.innerHTML += `<option value="${idx}">${numLabel}</option>`;
+
+    let optsHTML = q.opts.map((opt, oi) => {
+      const letter = LETTERS[oi];
+      return `<button class="opt" id="opt-${idx}-${letter}" onclick="choose(${idx},'${letter}')"
+        data-idx="${idx}" data-letter="${letter}">
+        <span class="opt-letter">${letter.toUpperCase()}</span>
+        <span>${opt}</span>
+      </button>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="q-num">${numLabel}</span>
+        <span class="q-text">${q.q}</span>
+      </div>
+      <div class="options">${optsHTML}</div>
+      <div class="feedback" id="fb-${idx}"></div>
+    `;
+    area.appendChild(card);
+
+    // restore state
+    if (userAnswers[idx] !== undefined) {
+      applyAnswer(idx, userAnswers[idx], false);
+    }
+  });
+}
+
+function choose(idx, letter) {
+  if (userAnswers[idx] !== undefined) return;
+  userAnswers[idx] = letter;
+  const realIdx = RAW.indexOf(questions[idx]);
+  const correct = questions[idx].ans === letter;
+  if (!correct) wrongSet.add(realIdx);
+  applyAnswer(idx, letter, true);
+  updateStats();
+}
+
+function applyAnswer(idx, letter, animate) {
+  const q = questions[idx];
+  const correct = q.ans === letter;
+  const fb = document.getElementById('fb-' + idx);
+
+  // Disable all buttons
+  q.opts.forEach((_, oi) => {
+    const btn = document.getElementById(`opt-${idx}-${LETTERS[oi]}`);
+    if (btn) btn.disabled = true;
+  });
+
+  // Mark chosen
+  const chosenBtn = document.getElementById(`opt-${idx}-${letter}`);
+  if (chosenBtn) chosenBtn.classList.add(correct ? 'correct-ans' : 'wrong-ans');
+
+  // If wrong, reveal correct
+  if (!correct) {
+    const corrBtn = document.getElementById(`opt-${idx}-${q.ans}`);
+    if (corrBtn) corrBtn.classList.add('revealed-correct');
+  }
+
+  // Feedback
+  if (fb) {
+    fb.className = 'feedback ' + (correct ? 'ok' : 'bad');
+    fb.innerHTML = correct
+      ? '✓ Correct!'
+      : `✗ Incorrect — correct answer: <strong>${q.ans.toUpperCase()}</strong>`;
+    if (animate) setTimeout(() => fb.classList.add('show'), 50);
+    else fb.classList.add('show');
+  }
+}
+
+function updateStats() {
+  const total = questions.length;
+  const answered = Object.keys(userAnswers).length;
+  const correct = Object.values(userAnswers).filter((l, i) => l === questions[i]?.ans).length;
+  const wrong = answered - correct;
+  const remain = total - answered;
+  const pct = total ? Math.round(answered/total*100) : 0;
+
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statRemain').textContent = remain;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progText').textContent = `${answered} / ${total} answered`;
+  document.getElementById('progPct').textContent = pct + '%';
+}
+
+function showResults() {
+  const total = questions.length;
+  const answered = Object.keys(userAnswers).length;
+  if (answered === 0) { alert('Answer some questions first!'); return; }
+  const correct = Object.values(userAnswers).filter((l, i) => l === questions[i]?.ans).length;
+  const pct = Math.round(correct/total*100);
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('resTitle').textContent = pct >= 70 ? '🎉 Well Done!' : 'Keep Studying';
+  document.getElementById('resPct').textContent = pct + '%';
+  document.getElementById('resPct').className = 'score-big ' + (pct >= 70 ? 'pass' : 'fail');
+  document.getElementById('resDetail').textContent =
+    `${correct} correct out of ${answered} answered (${total} total questions)`;
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+resetQuiz();
+</script>
+</body>
+</html>
