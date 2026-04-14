@@ -3,133 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SJX09 CSYA PPE Quiz</title>
+<title>CADA CASA PPE Prac</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:         #FAF6ED;
-    --surface:    #F4EFE3;
-    --surface2:   #EDE6D6;
-    --border:     #D6C9AF;
-    --accent:     #8B7355;
-    --accent-lt:  rgba(139,115,85,0.11);
-    --correct:    #4A6741;
-    --correct-lt: rgba(74,103,65,0.10);
-    --wrong:      #9B3A2A;
-    --wrong-lt:   rgba(155,58,42,0.09);
-    --flag:       #B8741A;
-    --flag-lt:    rgba(184,116,26,0.11);
-    --text:       #2C2416;
-    --text-mid:   #5C4F3A;
-    --text-muted: #9A8A72;
-    --radius:     10px;
-    --shadow:     0 2px 14px rgba(44,36,22,0.07);
+    --bg:#FAF6ED;--surface:#F4EFE3;--surface2:#EDE6D6;--border:#D6C9AF;
+    --accent:#8B7355;--accent-lt:rgba(139,115,85,0.11);
+    --correct:#4A6741;--correct-lt:rgba(74,103,65,0.10);
+    --wrong:#9B3A2A;--wrong-lt:rgba(155,58,42,0.09);
+    --flag:#B8741A;--flag-lt:rgba(184,116,26,0.11);
+    --text:#2C2416;--text-mid:#5C4F3A;--text-muted:#9A8A72;
+    --radius:10px;--shadow:0 2px 14px rgba(44,36,22,0.07);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg); color: var(--text);
-    font-family: 'Lora', serif; min-height: 100vh;
-    padding: 36px 16px 100px;
-    background-image:
-      radial-gradient(ellipse at 15% 8%,  rgba(139,115,85,0.055) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 92%, rgba(139,115,85,0.055) 0%, transparent 55%);
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Lora',serif;min-height:100vh;padding:36px 16px 100px;background-image:radial-gradient(ellipse at 15% 8%,rgba(139,115,85,0.055) 0%,transparent 55%),radial-gradient(ellipse at 85% 92%,rgba(139,115,85,0.055) 0%,transparent 55%);}
+  header{text-align:center;margin-bottom:38px;}
+  .eyebrow{font-style:italic;font-size:13px;color:var(--accent);letter-spacing:1px;margin-bottom:10px;opacity:0.85;}
+  header h1{font-weight:700;font-size:clamp(22px,5vw,32px);color:var(--text);}
+  header p{font-style:italic;color:var(--text-muted);font-size:14px;margin-top:7px;}
+  .header-rule{width:52px;height:2px;background:var(--accent);margin:16px auto 0;border-radius:99px;opacity:0.45;}
+
+  .answer-mode-bar{max-width:740px;margin:0 auto 22px;display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 18px;box-shadow:var(--shadow);}
+  .am-label{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;}
+  .toggle-track{position:relative;width:52px;height:28px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;cursor:pointer;flex-shrink:0;transition:background 0.25s,border-color 0.25s;}
+  .toggle-track.on{background:var(--accent);border-color:var(--accent);}
+  .toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#FAF6ED;box-shadow:0 1px 4px rgba(44,36,22,0.18);transition:transform 0.25s cubic-bezier(.4,0,.2,1);}
+  .toggle-track.on .toggle-thumb{transform:translateX(24px);}
+  .am-desc{font-style:italic;font-size:13px;color:var(--text-mid);}
+  .am-desc strong{font-style:normal;color:var(--accent);}
+
+  .mode-bar{max-width:740px;margin:0 auto 22px;display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;gap:4px;box-shadow:var(--shadow);}
+  .mode-btn{flex:1;padding:9px 6px;border:none;border-radius:9px;font-family:'Lora',serif;font-size:13px;cursor:pointer;background:transparent;color:var(--text-muted);transition:background 0.18s,color 0.18s,box-shadow 0.18s;}
+  .mode-btn.active{background:var(--bg);color:var(--accent);font-weight:600;box-shadow:0 1px 5px rgba(44,36,22,0.11);border:1px solid var(--border);}
+
+  .filter-row{max-width:740px;margin:0 auto 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .filter-lbl{font-style:italic;font-size:12px;color:var(--text-muted);}
+  select{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font-family:'Lora',serif;font-size:13px;cursor:pointer;}
+  .mode-badge{margin-left:auto;font-style:italic;font-size:12px;color:var(--text-muted);}
+
+  .progress-wrap{position:sticky;top:0;z-index:100;max-width:100%;margin:0 auto 20px;padding:12px 16px;background:rgba(250,246,237,0.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);border-radius:0 0 14px 14px;transition:box-shadow 0.25s;}
+  .progress-wrap.scrolled{box-shadow:0 4px 16px rgba(44,36,22,0.12);}
+  .progress-inner{max-width:740px;margin:0 auto;}
+  .progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:8px;}
+  .progress-bar-outer{height:4px;background:var(--surface2);border-radius:99px;overflow:hidden;border:1px solid var(--border);}
+  .progress-bar-inner{height:100%;background:var(--accent);border-radius:99px;transition:width 0.45s cubic-bezier(.4,0,.2,1);}
+
+  .stats-row{display:flex;gap:10px;max-width:740px;margin:0 auto 22px;}
+  .stat-box{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 10px;text-align:center;box-shadow:var(--shadow);transition:transform 0.15s;}
+  .stat-box:hover{transform:translateY(-1px);}
+  .stat-box .val{font-weight:700;font-size:28px;line-height:1;}
+  .stat-box .lbl{font-style:italic;font-size:11px;color:var(--text-muted);margin-top:5px;}
+  .stat-box.correct .val{color:var(--correct);}
+  .stat-box.wrong .val{color:var(--wrong);}
+  .stat-box.flagged .val{color:var(--flag);}
+  .stat-box.remain .val{color:var(--accent);}
+  @keyframes numPop{0%{transform:scale(1)}45%{transform:scale(1.28)}100%{transform:scale(1)}}
+  .val.pop{animation:numPop 0.28s cubic-bezier(.3,1.4,.6,1) forwards;}
+
+  .controls{max-width:740px;margin:0 auto 28px;display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{font-family:'Lora',serif;font-size:13px;font-weight:600;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:opacity 0.15s,transform 0.12s;}
+  .btn:active{transform:scale(0.96);}
+  .btn-primary{background:var(--accent);color:#FAF6ED;}
+  .btn-ghost{background:var(--surface);color:var(--text-mid);border:1px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+  .card{max-width:740px;margin:0 auto 18px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:border-color 0.25s,box-shadow 0.25s;animation:cardIn 0.3s cubic-bezier(.2,.8,.4,1) both;}
+  .card.flagged-card{border-color:var(--flag);box-shadow:0 2px 14px rgba(184,116,26,0.1);}
+  @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+  .card-header{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border);background:var(--surface2);}
+  .q-num{font-style:italic;font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-lt);border:1px solid rgba(139,115,85,0.22);border-radius:6px;padding:3px 9px;white-space:nowrap;margin-top:2px;flex-shrink:0;}
+  .q-text{font-weight:700;font-size:15px;line-height:1.6;flex:1;}
+  .flag-btn{background:none;border:none;cursor:pointer;font-size:17px;padding:3px 5px;border-radius:6px;flex-shrink:0;opacity:0.28;margin-top:1px;line-height:1;transition:opacity 0.18s,background 0.18s,transform 0.12s;}
+  .flag-btn:hover{background:var(--flag-lt);opacity:0.85;}
+  .flag-btn.flagged{opacity:1;}
+  .flag-btn:active{transform:scale(0.80);}
+
+  .options{padding:14px 18px;display:flex;flex-direction:column;gap:8px;}
+  .opt{display:flex;align-items:flex-start;gap:13px;padding:12px 15px;border:1px solid var(--border);border-radius:9px;cursor:pointer;background:var(--bg);text-align:left;color:var(--text);font-family:'Lora',serif;font-weight:400;font-size:14px;line-height:1.55;width:100%;transition:background 0.18s ease,border-color 0.18s ease,transform 0.15s cubic-bezier(.2,.8,.4,1);}
+  .opt:hover:not(:disabled):not(.lam-selected){background:var(--accent-lt);border-color:var(--accent);transform:translateX(3px);}
+  .opt-letter{font-style:italic;font-size:12px;font-weight:600;color:var(--text-muted);background:var(--surface2);border-radius:5px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:background 0.2s,color 0.2s;}
+
+  .opt.lam-selected{background:var(--accent-lt);border-color:var(--accent);transform:translateX(0) !important;}
+  .opt.lam-selected .opt-letter{background:var(--accent);color:#FAF6ED;}
+
+  .opt.correct-ans{background:var(--correct-lt);border-color:var(--correct);transform:translateX(0) !important;animation:correctPulse 0.4s cubic-bezier(.2,.8,.4,1) forwards;}
+  @keyframes correctPulse{0%{box-shadow:0 0 0 0 rgba(74,103,65,0);transform:translateX(3px)}40%{box-shadow:0 0 0 5px rgba(74,103,65,0.15)}100%{box-shadow:0 0 0 0 rgba(74,103,65,0);transform:translateX(0)}}
+  .opt.correct-ans .opt-letter{background:var(--correct);color:#FAF6ED;animation:badgePop 0.3s 0.05s cubic-bezier(.3,1.5,.6,1) both;}
+  .opt.wrong-ans{background:var(--wrong-lt);border-color:var(--wrong);animation:wrongShake 0.38s cubic-bezier(.36,.07,.19,.97) both;}
+  @keyframes wrongShake{0%,100%{transform:translateX(0)}18%{transform:translateX(-5px)}36%{transform:translateX(4px)}54%{transform:translateX(-3px)}72%{transform:translateX(2px)}}
+  .opt.wrong-ans .opt-letter{background:var(--wrong);color:#FAF6ED;animation:badgePop 0.3s 0.05s cubic-bezier(.3,1.5,.6,1) both;}
+  .opt.revealed-correct{background:rgba(74,103,65,0.06);border-color:rgba(74,103,65,0.42);animation:revealSlide 0.32s 0.15s cubic-bezier(.2,.8,.4,1) both;}
+  @keyframes revealSlide{from{opacity:0.4;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
+  .opt.revealed-correct .opt-letter{background:rgba(74,103,65,0.22);color:var(--correct);}
+  @keyframes badgePop{0%{transform:scale(0.7)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+  .opt:disabled{cursor:default;}
+
+  .feedback{margin:0 18px 14px;padding:10px 15px;border-radius:8px;font-style:italic;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(-4px);transition:opacity 0.22s ease,transform 0.22s ease;}
+  .feedback.show{opacity:1;transform:translateY(0);}
+  .feedback.ok{background:var(--correct-lt);color:var(--correct);border:1px solid rgba(74,103,65,0.28);}
+  .feedback.bad{background:var(--wrong-lt);color:var(--wrong);border:1px solid rgba(155,58,42,0.24);}
+
+  .lam-check-wrap{max-width:740px;margin:8px auto 32px;display:none;flex-direction:column;align-items:center;gap:12px;}
+  .lam-check-wrap.visible{display:flex;}
+  .lam-progress-note{font-style:italic;font-size:13px;color:var(--text-muted);}
+  .btn-check{font-family:'Lora',serif;font-size:15px;font-weight:700;padding:14px 40px;border-radius:10px;border:none;cursor:pointer;background:var(--correct);color:#FAF6ED;box-shadow:0 3px 14px rgba(74,103,65,0.25);transition:transform 0.12s,box-shadow 0.15s,opacity 0.15s;}
+  .btn-check:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 5px 18px rgba(74,103,65,0.3);}
+  .btn-check:active:not(:disabled){transform:scale(0.97);}
+  .btn-check:disabled{opacity:0.4;cursor:not-allowed;}
+
+  .lam-guide{max-width:740px;margin:0 auto 32px;display:none;flex-direction:column;gap:10px;}
+  .lam-guide.visible{display:flex;}
+  .lam-guide-title{font-style:italic;font-size:12px;color:var(--text-muted);text-align:center;letter-spacing:0.5px;}
+  .lam-guide-grid{display:flex;flex-wrap:wrap;gap:7px;}
+  .lam-guide-btn{
+    font-family:'Lora',serif;font-style:italic;font-size:12px;font-weight:500;
+    padding:6px 11px;border-radius:7px;border:1px solid var(--border);
+    background:var(--surface);color:var(--text-muted);cursor:pointer;
+    transition:transform 0.12s,box-shadow 0.12s;
+    display:flex;align-items:center;gap:5px;white-space:nowrap;
   }
-  header { text-align: center; margin-bottom: 38px; }
-  .eyebrow { font-style: italic; font-size: 13px; color: var(--accent); letter-spacing: 1px; margin-bottom: 10px; opacity: 0.85; }
-  header h1 { font-weight: 700; font-size: clamp(22px, 5vw, 32px); color: var(--text); }
-  header p  { font-style: italic; color: var(--text-muted); font-size: 14px; margin-top: 7px; }
-  .header-rule { width: 52px; height: 2px; background: var(--accent); margin: 16px auto 0; border-radius: 99px; opacity: 0.45; }
+  .lam-guide-btn:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(44,36,22,0.1);}
+  .lam-guide-btn:active{transform:scale(0.95);}
+  .lam-guide-btn.gb-unanswered{border-color:var(--border);color:var(--text-muted);}
+  .lam-guide-btn.gb-selected{border-color:var(--accent);background:var(--accent-lt);color:var(--accent);}
+  .lam-guide-btn.gb-correct{border-color:var(--correct);background:var(--correct-lt);color:var(--correct);}
+  .lam-guide-btn.gb-wrong{border-color:var(--wrong);background:var(--wrong-lt);color:var(--wrong);}
+  .gb-flag{font-size:11px;line-height:1;}
 
-  .mode-bar { max-width: 740px; margin: 0 auto 22px; display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px; gap: 4px; box-shadow: var(--shadow); }
-  .mode-btn { flex: 1; padding: 9px 6px; border: none; border-radius: 9px; font-family: 'Lora', serif; font-size: 13px; cursor: pointer; background: transparent; color: var(--text-muted); transition: background 0.18s, color 0.18s, box-shadow 0.18s; }
-  .mode-btn.active { background: var(--bg); color: var(--accent); font-weight: 600; box-shadow: 0 1px 5px rgba(44,36,22,0.11); border: 1px solid var(--border); }
+  #results{display:none;max-width:740px;margin:0 auto;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:48px 32px;box-shadow:var(--shadow);animation:cardIn 0.35s cubic-bezier(.2,.8,.4,1) both;}
+  #results h2{font-weight:700;font-size:26px;margin-bottom:6px;}
+  .score-big{font-weight:700;font-size:76px;line-height:1;margin:20px 0;animation:numPop 0.5s 0.1s cubic-bezier(.3,1.4,.6,1) both;}
+  .score-big.pass{color:var(--correct);}
+  .score-big.fail{color:var(--wrong);}
+  #results p{font-style:italic;color:var(--text-muted);font-size:14px;}
 
-  .filter-row { max-width: 740px; margin: 0 auto 18px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .filter-lbl { font-style: italic; font-size: 12px; color: var(--text-muted); }
-  select { background: var(--surface); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 6px 10px; font-family: 'Lora', serif; font-size: 13px; cursor: pointer; }
-  .mode-badge { margin-left: auto; font-style: italic; font-size: 12px; color: var(--text-muted); }
+  .empty-state{max-width:740px;margin:0 auto;text-align:center;padding:60px 24px;color:var(--text-muted);}
+  .empty-state .icon{font-size:42px;margin-bottom:14px;}
+  .empty-state h3{font-weight:700;font-size:19px;color:var(--text-mid);margin-bottom:8px;}
+  .empty-state p{font-style:italic;font-size:14px;}
 
-  .progress-wrap { max-width: 740px; margin: 0 auto 20px; }
-  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-  .progress-bar-outer { height: 4px; background: var(--surface2); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
-  .progress-bar-inner { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.45s cubic-bezier(.4,0,.2,1); }
+  @media(max-width:520px){.stats-row{flex-wrap:wrap}.stat-box{min-width:calc(50% - 5px)}.mode-btn{font-size:11.5px;padding:8px 4px}}
 
-  .stats-row { display: flex; gap: 10px; max-width: 740px; margin: 0 auto 22px; }
-  .stat-box { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px 10px; text-align: center; box-shadow: var(--shadow); transition: transform 0.15s; }
-  .stat-box:hover { transform: translateY(-1px); }
-  .stat-box .val { font-weight: 700; font-size: 28px; line-height: 1; }
-  .stat-box .lbl { font-style: italic; font-size: 11px; color: var(--text-muted); margin-top: 5px; }
-  .stat-box.correct .val { color: var(--correct); }
-  .stat-box.wrong   .val { color: var(--wrong); }
-  .stat-box.flagged .val { color: var(--flag); }
-  .stat-box.remain  .val { color: var(--accent); }
-  @keyframes numPop { 0%{transform:scale(1)} 45%{transform:scale(1.28)} 100%{transform:scale(1)} }
-  .val.pop { animation: numPop 0.28s cubic-bezier(.3,1.4,.6,1) forwards; }
-
-  .controls { max-width: 740px; margin: 0 auto 28px; display: flex; gap: 10px; flex-wrap: wrap; }
-  .btn { font-family: 'Lora', serif; font-size: 13px; font-weight: 600; padding: 9px 20px; border-radius: 8px; border: none; cursor: pointer; transition: opacity 0.15s, transform 0.12s; }
-  .btn:active { transform: scale(0.96); }
-  .btn-primary { background: var(--accent); color: #FAF6ED; }
-  .btn-ghost { background: var(--surface); color: var(--text-mid); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-
-  .card { max-width: 740px; margin: 0 auto 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); transition: border-color 0.25s, box-shadow 0.25s; animation: cardIn 0.3s cubic-bezier(.2,.8,.4,1) both; }
-  .card.flagged-card { border-color: var(--flag); box-shadow: 0 2px 14px rgba(184,116,26,0.1); }
-  @keyframes cardIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-
-  .card-header { display: flex; align-items: flex-start; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--border); background: var(--surface2); }
-  .q-num { font-style: italic; font-size: 11px; font-weight: 500; color: var(--accent); background: var(--accent-lt); border: 1px solid rgba(139,115,85,0.22); border-radius: 6px; padding: 3px 9px; white-space: nowrap; margin-top: 2px; flex-shrink: 0; }
-  .q-text { font-weight: 700; font-size: 15px; line-height: 1.6; flex: 1; }
-  .flag-btn { background: none; border: none; cursor: pointer; font-size: 17px; padding: 3px 5px; border-radius: 6px; flex-shrink: 0; opacity: 0.28; margin-top: 1px; line-height: 1; transition: opacity 0.18s, background 0.18s, transform 0.12s; }
-  .flag-btn:hover { background: var(--flag-lt); opacity: 0.85; }
-  .flag-btn.flagged { opacity: 1; }
-  .flag-btn:active { transform: scale(0.80); }
-
-  .options { padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; }
-  .opt { display: flex; align-items: flex-start; gap: 13px; padding: 12px 15px; border: 1px solid var(--border); border-radius: 9px; cursor: pointer; background: var(--bg); text-align: left; color: var(--text); font-family: 'Lora', serif; font-weight: 400; font-size: 14px; line-height: 1.55; width: 100%; transition: background 0.18s ease, border-color 0.18s ease, transform 0.15s cubic-bezier(.2,.8,.4,1); }
-  .opt:hover:not(:disabled) { background: var(--accent-lt); border-color: var(--accent); transform: translateX(3px); }
-  .opt-letter { font-style: italic; font-size: 12px; font-weight: 600; color: var(--text-muted); background: var(--surface2); border-radius: 5px; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: background 0.2s, color 0.2s; }
-
-  .opt.correct-ans { background: var(--correct-lt); border-color: var(--correct); transform: translateX(0) !important; animation: correctPulse 0.4s cubic-bezier(.2,.8,.4,1) forwards; }
-  @keyframes correctPulse { 0%{box-shadow:0 0 0 0 rgba(74,103,65,0);transform:translateX(3px)} 40%{box-shadow:0 0 0 5px rgba(74,103,65,0.15)} 100%{box-shadow:0 0 0 0 rgba(74,103,65,0);transform:translateX(0)} }
-  .opt.correct-ans .opt-letter { background: var(--correct); color: #FAF6ED; animation: badgePop 0.3s 0.05s cubic-bezier(.3,1.5,.6,1) both; }
-  .opt.wrong-ans { background: var(--wrong-lt); border-color: var(--wrong); animation: wrongShake 0.38s cubic-bezier(.36,.07,.19,.97) both; }
-  @keyframes wrongShake { 0%,100%{transform:translateX(0)} 18%{transform:translateX(-5px)} 36%{transform:translateX(4px)} 54%{transform:translateX(-3px)} 72%{transform:translateX(2px)} }
-  .opt.wrong-ans .opt-letter { background: var(--wrong); color: #FAF6ED; animation: badgePop 0.3s 0.05s cubic-bezier(.3,1.5,.6,1) both; }
-  .opt.revealed-correct { background: rgba(74,103,65,0.06); border-color: rgba(74,103,65,0.42); animation: revealSlide 0.32s 0.15s cubic-bezier(.2,.8,.4,1) both; }
-  @keyframes revealSlide { from{opacity:0.4;transform:translateX(-4px)} to{opacity:1;transform:translateX(0)} }
-  .opt.revealed-correct .opt-letter { background: rgba(74,103,65,0.22); color: var(--correct); }
-  @keyframes badgePop { 0%{transform:scale(0.7)} 60%{transform:scale(1.15)} 100%{transform:scale(1)} }
-  .opt:disabled { cursor: default; }
-
-  .feedback { margin: 0 18px 14px; padding: 10px 15px; border-radius: 8px; font-style: italic; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateY(-4px); transition: opacity 0.22s ease, transform 0.22s ease; }
-  .feedback.show { opacity: 1; transform: translateY(0); }
-  .feedback.ok  { background: var(--correct-lt); color: var(--correct); border: 1px solid rgba(74,103,65,0.28); }
-  .feedback.bad { background: var(--wrong-lt);   color: var(--wrong);   border: 1px solid rgba(155,58,42,0.24); }
-
-  #results { display: none; max-width: 740px; margin: 0 auto; text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 48px 32px; box-shadow: var(--shadow); animation: cardIn 0.35s cubic-bezier(.2,.8,.4,1) both; }
-  #results h2 { font-weight: 700; font-size: 26px; margin-bottom: 6px; }
-  .score-big { font-weight: 700; font-size: 76px; line-height: 1; margin: 20px 0; animation: numPop 0.5s 0.1s cubic-bezier(.3,1.4,.6,1) both; }
-  .score-big.pass { color: var(--correct); }
-  .score-big.fail { color: var(--wrong); }
-  #results p { font-style: italic; color: var(--text-muted); font-size: 14px; }
-
-  .empty-state { max-width: 740px; margin: 0 auto; text-align: center; padding: 60px 24px; color: var(--text-muted); }
-  .empty-state .icon { font-size: 42px; margin-bottom: 14px; }
-  .empty-state h3 { font-weight: 700; font-size: 19px; color: var(--text-mid); margin-bottom: 8px; }
-  .empty-state p { font-style: italic; font-size: 14px; }
-
-  @media (max-width: 520px) { .stats-row{flex-wrap:wrap} .stat-box{min-width:calc(50% - 5px)} .mode-btn{font-size:11.5px;padding:8px 4px} }
+  /* Floating jump button — LAM only */
+  .float-jump{position:fixed;right:22px;bottom:24px;width:52px;height:52px;border-radius:50%;border:1px solid var(--border);background:var(--accent);color:#FAF6ED;font-size:22px;cursor:pointer;box-shadow:0 4px 18px rgba(44,36,22,0.22);display:none;align-items:center;justify-content:center;z-index:200;transition:transform 0.18s,box-shadow 0.18s,background 0.25s;font-family:'Lora',serif;}
+  .float-jump.visible{display:flex;}
+  .float-jump:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(44,36,22,0.28);}
+  .float-jump:active{transform:scale(0.92);}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="eyebrow">CPL Theory · Aircraft Systems</div>
-  <h1>SJX09 CSYA PPE Question Bank</h1>
-  <p>77 questions — options shuffled on every reset</p>
+  <div class="eyebrow">CPL Theory · Aerodynamics</div>
+  <h1>CASA CADA PPE Prac</h1>
+  <p>Road to 95+</p>
   <div class="header-rule"></div>
 </header>
+
+<div class="answer-mode-bar">
+  <span class="am-label">Answer Mode</span>
+  <div class="toggle-track on" id="lamToggle" onclick="toggleAnswerMode()">
+    <div class="toggle-thumb"></div>
+  </div>
+  <span class="am-desc" id="amDesc"><strong>LAM</strong> — select all answers, then check at the end</span>
+</div>
 
 <div class="mode-bar">
   <button class="mode-btn active" onclick="setMode('all')">All</button>
@@ -144,19 +182,21 @@
   <span class="mode-badge" id="modeLabel">All Questions</span>
 </div>
 
-<div class="progress-wrap">
-  <div class="progress-meta">
-    <span id="progText">0 / 77 answered</span>
-    <span id="progPct">0%</span>
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-inner">
+    <div class="progress-meta">
+      <span id="progText">0 / 3 selected</span>
+      <span id="progPct">0%</span>
+    </div>
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar" style="width:0%"></div></div>
   </div>
-  <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar" style="width:0%"></div></div>
 </div>
 
 <div class="stats-row">
   <div class="stat-box correct"><div class="val" id="statCorrect">0</div><div class="lbl">Correct</div></div>
   <div class="stat-box wrong">  <div class="val" id="statWrong">0</div>  <div class="lbl">Wrong</div></div>
   <div class="stat-box flagged"><div class="val" id="statFlagged">0</div><div class="lbl">Flagged</div></div>
-  <div class="stat-box remain"> <div class="val" id="statRemain">77</div><div class="lbl">Remaining</div></div>
+  <div class="stat-box remain"> <div class="val" id="statRemain">3</div><div class="lbl">Remaining</div></div>
 </div>
 
 <div class="controls">
@@ -166,6 +206,16 @@
 
 <div id="quizArea"></div>
 
+<div class="lam-check-wrap visible" id="lamCheckWrap">
+  <span class="lam-progress-note" id="lamNote">0 / 3 selected — answer all to unlock</span>
+  <button class="btn-check" id="lamCheckBtn" onclick="lamRevealAll()" disabled>Check Answers</button>
+</div>
+
+<div class="lam-guide" id="lamGuide">
+  <span class="lam-guide-title">Quick navigation — tap any question to jump</span>
+  <div class="lam-guide-grid" id="lamGuideGrid"></div>
+</div>
+
 <div id="results">
   <div class="eyebrow" style="margin-bottom:10px">Final Score</div>
   <h2 id="resTitle"></h2>
@@ -174,291 +224,329 @@
   <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top:22px">Try Again</button>
 </div>
 
+<button class="float-jump" id="floatJump" onclick="floatJumpClick()" title="Jump to question list">↓</button>
+
 <script>
 const RAW = [
-  {q:"Which is true about the effect a supercharger has on the endurance of an aircraft?",opts:[{t:"None of these",c:true},{t:"Fly at any level, it has no effect on endurance",c:false},{t:"Always fly as high as possible",c:false},{t:"Always fly as low as is safe to do so",c:false}]},
-  {q:"During a long climb the CHT becomes too hot. This can be rectified by:",opts:[{t:"raising the nose to shorten the climb duration",c:false},{t:"lowering the nose to improve airflow",c:false},{t:"step climbing",c:false},{t:"lowering the nose or step climbing",c:true}]},
-  {q:"A turbo charged engine on a fixed wing. In this case the engine will develop max power at:",opts:[{t:"sea level",c:true},{t:"5000 ft",c:false},{t:"the critical altitude",c:false},{t:"all altitudes up to the critical altitude",c:false}]},
-  {q:"In an aircraft with 2 x 12v batteries in series the system would be:",opts:[{t:"18DC system",c:false},{t:"28VDC system",c:true},{t:"24VDC system",c:false},{t:"12VDC system",c:false}]},
-  {q:"Which of the following statements would NOT be a check for the serviceability of a magnetic compass?",opts:[{t:"Check compass reading against runway direction",c:true},{t:"Check for liquid or paint discolouration",c:false},{t:"Check for pivot friction",c:false},{t:"Check for the presence of a bubble in the liquid",c:false}]},
-  {q:"Why is it that with some ignition systems one magneto is 'earthed' whilst attempts are made to start the engine up?",opts:[{t:"To get the ignition timing correct for start up",c:true},{t:"To allow the battery to provide a strong retarded spark",c:false},{t:"To provide a strong advanced spark",c:false},{t:"None of these",c:false}]},
-  {q:"A good oil will work, no matter what engine temperature it is operating at.",opts:[{t:"False",c:true},{t:"True",c:false}]},
-  {q:"The difference between detonation and pre-ignition is based on:",opts:[{t:"the number of cylinders it occurs in",c:false},{t:"whether any engine damage is occurring",c:false},{t:"the pressure within the cylinders",c:false},{t:"the temperature of the uncontrolled ignition",c:true}]},
-  {q:"You have almost finished a climb from 3000 ft to 10,000 ft. The presence of a blocked pitot tube on climb could be observed by a:",opts:[{t:"a decreasing airspeed",c:false},{t:"increasing nose attitude to maintain airspeed",c:true},{t:"an altimeter reading zero",c:false},{t:"decreasing nose attitude to maintain airspeed",c:false}]},
-  {q:"Which fire extinguishing element envelopes the fuel and deprives it of oxygen?",opts:[{t:"Freon",c:false},{t:"Halogenated hydrocarbon agents",c:true},{t:"Non-combustible gas",c:false},{t:"Dry Powder",c:false}]},
-  {q:"Whilst in-flight you note that your aircraft's oil pressure gauge displays a low, but stable reading whilst the oil temperature gauge shows a slightly elevated reading. In this case the:",opts:[{t:"engine driven pump (EDP) has failed",c:false},{t:"pressure release valve is stuck closed",c:false},{t:"pressure release valve is stuck open",c:true},{t:"scavenge pump(s) has/have failed",c:false}]},
-  {q:"During a full power check before take-off, at an aerodrome with a high density altitude, some engine roughness is noticed. The roughness disappears as the mixture is leaned slightly. Under these circumstances, take-off should:",opts:[{t:"be made with full rich mixture, and the throttle retarded to the point of smooth running",c:false},{t:"be made with full throttle, full rich mixture, and the roughness accepted for the take-off run",c:false},{t:"not be attempted until a LAME has rectified the problem",c:false},{t:"be made with full throttle, and the mixture leaned to the point of smooth running",c:true}]},
-  {q:"Your aircraft's fuel injected engine is equipped with a turbine impeller transducer for measuring fuel flow. With normal power and mixture settings the fuel flow gauge displays a high fluctuating reading. The probable cause of this is:",opts:[{t:"a blocked fuel filter",c:false},{t:"an excessively high power setting ('over square')",c:false},{t:"an overly rich mixture",c:false},{t:"a leaking fuel line",c:true}]},
-  {q:"For the purposes of RPL level pilots, most of our flying is done with which mixture setting?",opts:[{t:"A fully rich mixture",c:true},{t:"A fully lean mixture",c:false},{t:"None of these",c:false},{t:"A medium mixture",c:false}]},
-  {q:"In flight, a correct interpretation of your aircraft's centre zero type ammeter:",opts:[{t:"a positive deflection shows that the battery is supplying current to the BUS",c:false},{t:"a zero reading indicates that the battery is fully charged",c:false},{t:"a zero reading indicates the alternator output is meeting the demands from the BUS",c:true},{t:"the amount of positive deflection is relative to the current demand on the main power BUS",c:false},{t:"a negative reading indicates that the alternator is charging the battery",c:false}]},
-  {q:"When the test switch of a wire-loop type fire detection system is depressed pre-take-off, what is actually being tested?",opts:[{t:"The integrity of the entire system including the loop and the associated sensing units",c:false},{t:"Only the continuity of the wire loop and not the sensors or the fire bottles",c:true},{t:"The contents of the fire bottles",c:false},{t:"The fire detectors (i.e. the sensing units) fitted to the wire loop within the engine bay",c:false}]},
-  {q:"Where in the fuel system would check valves be found?",opts:[{t:"fuel inspection drains and high pressure fuel pump bypass lines",c:false},{t:"tank vents and high pressure fuel pump bypass lines",c:true},{t:"tank vents and fuel inspection drains",c:false}]},
-  {q:"An aircraft cruising at an indicated 3000 ft with the altimeter sub-scale set to area QNH 1020 hPa is about to overfly an aerodrome sited 1250 ft AMSL. If the aerodrome QNH at the time is 1026 hPa, the aircraft's overflying height will be:",opts:[{t:"1930 ft AGL",c:false},{t:"3000 ft AGL",c:false},{t:"1750 ft AGL",c:true},{t:"1570 ft AGL",c:false}]},
-  {q:"Compressibility error (in an ASI) is greatest when an aircraft is flying at:",opts:[{t:"high altitude and low airspeed",c:false},{t:"high altitude and high airspeed",c:true},{t:"low altitude and low airspeed",c:false},{t:"low altitude and high airspeed",c:false}]},
-  {q:"The starter relay is:",opts:[{t:"an agitator to engage the starter motor, the starter relay is sometimes called the starter circuit",c:false},{t:"an actuator to engage the starter motor, the starter relay is sometimes called the starter solenoid",c:true},{t:"an agitator to engage the starter motor, the starter relay is sometimes called the starter module",c:false},{t:"an actuator to engage the starter motor, the starter relay is sometimes called the starter motor",c:false}]},
-  {q:"A pressure relief valve (PRV) in an aircraft's (wet sump) oil system:",opts:[{t:"is typically set at a pressure that is slightly greater than the maximum outlet pressure of the EDP",c:false},{t:"acts to limit oil pressure at low engine rpm only",c:false},{t:"senses pressure at some point in the scavenge system",c:false},{t:"prevents oil pressure becoming excessive at high engine rpm only",c:false},{t:"acts to limit oil pressure at all engine speeds",c:true}]},
-  {q:"During your magneto checks you note that the aircraft is running smoothly on both, smooth on R, but roughly on L. What is the likely problem?",opts:[{t:"The magneto switch is faulty",c:false},{t:"The left magneto has failed",c:false},{t:"The right magneto is faulty",c:false},{t:"A spark plug is faulty",c:true}]},
-  {q:"CAS is:",opts:[{t:"IAS corrected for compressibility error",c:false},{t:"IAS corrected for PEC",c:true},{t:"TAS corrected for density error and PEC",c:false},{t:"EAS corrected for compressibility error",c:false}]},
-  {q:"EAS is CAS corrected for:",opts:[{t:"temperature error",c:false},{t:"compressibility error",c:true},{t:"PEC",c:false},{t:"density error",c:false}]},
-  {q:"You are conducting your pre takeoff magneto check. When you switch to the R magneto, the rpm drops 150 rpm more than it should, but the engine is still silk smooth. What is the likely cause?",opts:[{t:"A faulty magneto switch",c:false},{t:"The magneto has failed",c:false},{t:"A spark plug has fouled",c:false},{t:"The magneto timing is out",c:true}]},
-  {q:"In general, an electric starter motor should not be operated for more than:",opts:[{t:"30 secs continuously in any 4 (consecutive) minute period",c:true},{t:"2 mins continuously in any 4 (consecutive) minute period",c:false},{t:"1 minute continuously in any 3 (consecutive) minute period",c:false},{t:"60 secs continuously in any 5 (consecutive) minute period",c:false}]},
-  {q:"Excess current to instruments is regulated by:",opts:[{t:"bus bar",c:false},{t:"battery",c:false},{t:"regulator",c:false},{t:"circuit breakers",c:true}]},
-  {q:"In a supercharged aircraft with a 2 stage supercharger, take off under normal circumstances from a near sea level aerodrome would:",opts:[{t:"use low blower, altitude boosted",c:false},{t:"use high blower, altitude boosted",c:false},{t:"use low blower, ground boosted",c:true},{t:"use high blower, ground boosted",c:false}]},
-  {q:"Which form of waste gate would provide maximum efficiency?",opts:[{t:"Throttle operated wastegate",c:false},{t:"Pilot operated waste gate",c:true},{t:"Fixed waste gate",c:false}]},
-  {q:"Which of the following airspeed values must be prominently marked on a twin-engined aircraft's ASI dial?",opts:[{t:"Vtoss",c:false},{t:"Vle",c:false},{t:"Vmc(a)",c:false},{t:"Vyse",c:true},{t:"Va",c:false},{t:"Vlo",c:false},{t:"Vx",c:false}]},
-  {q:"A turbo-charged aero-engine featuring a manually adjustable waste gate is built structurally strong enough to withstand MPs as high as 30\". In this case, the pilot must:",opts:[{t:"ensure the WG is open for all but cruise operations",c:false},{t:"not start closing the WG until climbing through approx 5000 ft",c:false},{t:"not activate the WG to produce MP values in excess of 30\"",c:true},{t:"keep the WG fully open for all take offs",c:false},{t:"ensure the WG is fully closed for all take offs",c:false}]},
-  {q:"An overvoltage relay (OVR) in a 14 and 28 volt system will trigger at what voltage?",opts:[{t:"16 and 32 volts",c:false},{t:"15 and 30 volts",c:false},{t:"15.5 and 31 volts",c:true},{t:"14.5 and 29 volts",c:false}]},
-  {q:"Which of the following statements would NOT be a check for the serviceability of a magnetic compass? (second instance)",opts:[{t:"Check for the presence of a bubble in the liquid",c:false},{t:"Check for liquid or paint discolouration",c:false},{t:"Check for pivot friction",c:false},{t:"Check compass reading against runway direction",c:true}]},
-  {q:"Carburetors are normally calibrated at sea-level air pressure where the correct fuel-air mixture ratio is established with the mixture control set to?",opts:[{t:"75% to the FULL LEAN position",c:false},{t:"75% to the FULL RICH position",c:false},{t:"the FULL LEAN position",c:false},{t:"the FULL RICH position",c:true}]},
-  {q:"Which of the following would be the most likely cause of a very high oil pressure gauge reading when airborne?",opts:[{t:"A badly blocked oil filter",c:false},{t:"An obstructed oil cooler",c:false},{t:"Excessive oil temperatures",c:false},{t:"Colder than normal oil temperatures",c:true}]},
-  {q:"The reading of a direction gyro must be treated with caution as the instrument is liable to error:",opts:[{t:"when the aeroplane is accelerating on easterly or westerly headings",c:false},{t:"resulting from precession and mechanical wander",c:true},{t:"when the aeroplane is flying through turbulence",c:false},{t:"when the aeroplane is turning through northerly or southerly headings",c:false}]},
-  {q:"The transducer that measures fuel flow gauge directly, measures:",opts:[{t:"fuel viscosity",c:false},{t:"fuel pressure",c:true},{t:"fuel flow",c:false},{t:"fuel temperature",c:false}]},
-  {q:"What is the minimum altitude (if any) at which the mixture strength should be leaned if cruising on 75% max continuous power? (assume engine naturally aspirated)",opts:[{t:"3000 ft",c:false},{t:"10,000 ft",c:false},{t:"At any altitude",c:true},{t:"5000 ft",c:false}]},
-  {q:"Infra-red detector fire extinguishers operate by:",opts:[{t:"react to the presence of hotspots",c:true},{t:"are colour light sensors that visually observe the presence of fire",c:false},{t:"provide a warning when a digital thermometer reading surpasses a certain level",c:false},{t:"provide a warning when the heat closes the circuit",c:false}]},
-  {q:"A hydraulic system would have components in order from closest to the pilot, to closest to the activating component in which order?",opts:[{t:"reservoir, valve, actuator, pump",c:false},{t:"actuator, pump, reservoir, valve",c:false},{t:"pump, reservoir, valve, actuator",c:true},{t:"valve, actuator, pump, reservoir",c:false}]},
-  {q:"You are to turn your aircraft using 15° of right bank (at contact altitude) from 310° onto north. In this case you should re-level the aircraft when the magnetic compass reads approx.:",opts:[{t:"355",c:false},{t:"005",c:true},{t:"325",c:false},{t:"015",c:false},{t:"360",c:false}]},
-  {q:"During a daily inspection of your aircraft on a sea level aerodrome, you should check to see that the manifold pressure gauge (MAP) displays:",opts:[{t:"29.92\"",c:true},{t:"approx. 28\"",c:false},{t:"approx. 30\"",c:false},{t:"a value that is dependent on whether the engine is naturally aspirated or 'blown'",c:false}]},
-  {q:"In a hydraulic braking system the cylinder closest to the disk is known as the:",opts:[{t:"slave cylinder",c:true},{t:"master cylinder",c:false},{t:"none of these",c:false},{t:"command cylinder",c:false}]},
-  {q:"On a turbocharged or supercharged engine best Volumetric Efficiency will be achieved at:",opts:[{t:"at the maximum possible altitude the aircraft will reach",c:false},{t:"where full throttle gives you no more power",c:false},{t:"where full throttle gives you the desired % power setting",c:true},{t:"sea level",c:false}]},
-  {q:"The critical altitude where a turbo powered aircraft, even with its waste gate fully closed and a wide open throttle, will reach its limits is generally around which altitude?",opts:[{t:"5000 - 10,000 feet",c:false},{t:"20,000 - 25,000 feet",c:false},{t:"10,000 - 15,000 feet",c:false},{t:"15,000 - 20,000 feet",c:true}]},
-  {q:"A direction type magnetic compass is a stable/unstable heading reference and is most often easy/difficult to use accurately.",opts:[{t:"stable and easy",c:false},{t:"unstable but easy",c:false},{t:"unstable and difficult",c:true},{t:"stable but difficult",c:false}]},
-  {q:"A sudden engine roughness or misfiring is usually evidence of:",opts:[{t:"magneto problems",c:true},{t:"a faulty spark plug",c:false},{t:"wastegate problems",c:false},{t:"oil bypass valve problems",c:false}]},
-  {q:"During a glide descent, carb heat should be applied in the following manner:",opts:[{t:"Applied after commencing glide and removed just after re-applying power",c:false},{t:"Applied prior to commencing glide and removed after re-applying power",c:true},{t:"Applied prior to commencing glide and removed just prior to re-applying power",c:false},{t:"Applied prior to commencing glide",c:false}]},
-  {q:"What is the reason for the need to regularly adjust the heading card in a DG when heading east or west?",opts:[{t:"Apparent precession",c:true},{t:"Earth transport wander precession",c:false},{t:"Bearing friction",c:false},{t:"None of these",c:false}]},
-  {q:"Which most accurately describes the difference between a normally aspirated aircraft and a forced induction aircraft when climbing?",opts:[{t:"The forced induction aircraft can fly to higher altitudes and climb at increased climb rates",c:false},{t:"They have the same maximum height and climb rate, however the forced induction aircraft does it with less fuel",c:false},{t:"They reach the same maximum altitude, but the forced induction aircraft gets there quicker",c:false},{t:"The forced induction aircraft can fly to higher altitudes at the same climb rates as a normally aspirated aircraft",c:true}]},
-  {q:"Fluctuating fuel pressure gauge, no other warnings, the likely cause is:",opts:[{t:"transfer pump not working",c:false},{t:"fuel level too low",c:false},{t:"engine pump failed",c:false},{t:"boost pump failed",c:true}]},
-  {q:"You are flying at 2000 FT, 12 NM from the nearest aerodrome and experience a sudden engine roughness or misfiring. After checking fuel pressures and switching tanks the fuel system seems fine. You could check for a failed magneto by:",opts:[{t:"switching from BOTH to the R magneto",c:false},{t:"reducing RPM, cycle both mag switches then increase RPM",c:false},{t:"switching from BOTH to the L magneto, then the R magneto if no symptoms on L",c:true},{t:"switching from BOTH to the L magneto",c:false}]},
-  {q:"How long and when should carby heat be used?",opts:[{t:"Most of the way to landing on a long descent",c:false},{t:"Some of the way to landing on a long descent",c:false},{t:"Part of the way to landing on a long descent",c:false},{t:"All the way to landing on a long descent",c:true}]},
-  {q:"As airspeed increases in flight, a propeller blade designed with the same angle of incidence from hub to tip would?",opts:[{t:"have the portion near the hub with a negative AOA while the blade tip would be stalled",c:false},{t:"have the portion near the hub stalled while the blade tip would have a negative AOA",c:true},{t:"have the portion near the hub stalled and the blade tip stalled",c:false},{t:"both the portion near the hub and the blade tip would have a negative AOA",c:false}]},
-  {q:"What are the properties of a climb fixed pitch propeller?",opts:[{t:"lower pitch, therefore less drag",c:false},{t:"higher pitch, therefore more drag",c:false},{t:"lower pitch, therefore more drag",c:true},{t:"higher pitch, therefore less drag",c:false}]},
-  {q:"Throttle ice is most likely to form when:",opts:[{t:"absorption of latent heat as the atomised air/fuel mixture condenses",c:false},{t:"adiabatic cooling of the air/fuel mixture",c:true},{t:"supercooled water vapor sublimes onto the throttle butterfly valve",c:false},{t:"the velocity of the air/fuel mixture increases in a Venturi",c:false}]},
-  {q:"On aircraft equipped with a constant-speed propeller, for any given rpm:",opts:[{t:"there is an exact manifold pressure number that should be indicated",c:false},{t:"there is a manifold pressure lower limit that should not be exceeded",c:false},{t:"there is a manifold pressure upper limit that should not be exceeded",c:true}]},
-  {q:"On climb what will be the effect on turbocharger operation with an automatic boost control if a significant exhaust gas leak develops upstream of the waste gate?",opts:[{t:"No noticeable effect",c:true},{t:"Power output reduced",c:false},{t:"Power surges will occur",c:false},{t:"Engine will over boost",c:false}]},
-  {q:"Your aircraft's turbo-charged engine features a fixed waste gate. What action will you need to take to maintain MAP if climbing on 100% max continuous power?",opts:[{t:"Progressively lean the mixture",c:false},{t:"The MAP cannot be maintained",c:false},{t:"Progressively advance the throttle",c:true},{t:"Nothing",c:false}]},
-  {q:"The 'rated altitude' of a turbocharged engine featuring a fixed wastegate is:",opts:[{t:"15,000 ft",c:false},{t:"5,000 ft",c:false},{t:"10,000 ft",c:false},{t:"sea level",c:true}]},
-  {q:"Shimmy dampers are fitted to:",opts:[{t:"mainwheels",c:false},{t:"tailwheels only",c:true},{t:"ailerons",c:false},{t:"rudders",c:false}]},
-  {q:"In many airplanes the avionics master relay is powered closed, meaning to turn off avionics power you would need electrical power to the relay. If you lose power to the avionics bus:",opts:[{t:"you may be able to push the breaker, and that might solve the problem by removing power from the relay",c:false},{t:"you may be able to push the breaker, and that might solve the problem by adding power to the relay",c:false},{t:"you may be able to pull the breaker, and that might solve the problem by removing power from the relay",c:true},{t:"you may be able to pull the breaker, and that might solve the problem by adding power to the relay",c:false}]},
-  {q:"Severe detonation of the 'charge' within an engine's combustion chambers is likely to result in:",opts:[{t:"low CHT gauge but high EGT gauge readings",c:false},{t:"low CHT gauge and EGT gauge readings",c:false},{t:"high CHT gauge but low EGT gauge readings",c:false},{t:"elevated CHT gauge and EGT gauge readings",c:true}]},
-  {q:"Abnormal manifold fluctuations in an aircraft fitted with a turbocharged engine could be indicative of a:",opts:[{t:"a leak within the wastegate itself",c:false},{t:"a leak in the exhaust system",c:false},{t:"a leak upstream of the turbine",c:false},{t:"sticky wastegate",c:true}]},
-  {q:"The purpose of up-locks is to:",opts:[{t:"none of these",c:false},{t:"improve the safety of the unreliable retraction system",c:false},{t:"enhance the power of the retraction system",c:false},{t:"allow the retraction system to be shut down",c:true}]},
-  {q:"A turbo or supercharger compressor that is so powerful that it would result in engine damage at sea level, is known as:",opts:[{t:"sea pressure limited",c:false},{t:"non-inducted",c:false},{t:"altitude boosted",c:true},{t:"altitude sensitive",c:false}]},
-  {q:"Just after establishing your aircraft in the cruise you observe the reading of the cylinder head temperature gauge to be at an abnormally high value. If it remains so high:",opts:[{t:"the ignition timing must be overly advanced",c:false},{t:"overly lean mixture strengths are very likely",c:true},{t:"charge detonation should be of concern",c:false},{t:"'after-firing' of the fuel/air charge is likely",c:false}]},
-  {q:"If in flight a high voltage alarm occurs the pilot should:",opts:[{t:"turn off the battery and fly on alternator charge only",c:false},{t:"none of these",c:false},{t:"turn off the alternator and fly on battery to the nearest available airport",c:true},{t:"turn off all electrical systems and taxi back to the hanger",c:false},{t:"instantly stop the motor and do a forced landing into any safe area available",c:false}]},
-  {q:"What is the role of an aircraft voltage regulator?",opts:[{t:"All of these",c:true},{t:"To provide over-voltage protection",c:false},{t:"Maintain a constant voltage level",c:false},{t:"Field short protection",c:false},{t:"To reverse battery protection",c:false}]},
-  {q:"When the aircraft is being cranked, the magneto flicks then stops then flicks. This is known as a/an:",opts:[{t:"impulsion",c:false},{t:"impellor",c:false},{t:"impulse coupling",c:true},{t:"impulsinator",c:false}]},
-  {q:"A pressure altimeter will display an aircraft's true altitude:",opts:[{t:"if the 'PEC' value is zero",c:false},{t:"very occasionally",c:false},{t:"on most occasions",c:false},{t:"whenever the subscale is set to 1013.25 hPa",c:false},{t:"whenever the sub-scale is set in an 'actual' QNH value",c:true}]},
-  {q:"One of the principal advantages of a servo assisted altimeter over a conventional pressure altimeter is that it:",opts:[{t:"does not require manual input of a barometric setting",c:true},{t:"will register a level change with any change to the aircraft's pitch attitude",c:false},{t:"is able to display the aircraft's current height above the terrain",c:false},{t:"automatically allows the aircraft transponder to respond to mode C interrogations from the ground",c:false},{t:"is more accurate at all altitudes, especially above FL 200",c:false}]},
-  {q:"If air was present in the hydraulic system, the likely symptoms would include:",opts:[{t:"a lack of pressure",c:false},{t:"overheating",c:false},{t:"both of these",c:true},{t:"none of these",c:false}]},
-  {q:"Which of the following statements regarding manual leaning of the mixture strength is correct? (Assume non-turbocharged engine)",opts:[{t:"Climbing on other than the 'best power' mixture is highly inadvisable",c:false},{t:"The mixture should be leaned an appropriate amount if cruising on 75% max continuous power or less",c:true},{t:"Take off should not be attempted unless the mixture is full rich",c:false},{t:"The mixture should be full rich if intending to fly below 5000 ft",c:false},{t:"The mixture must only ever be leaned to the minimum extent necessary to avoid 'rough running'",c:false}]},
-  {q:"One of the main precautions to be observed when operating an aeroplane fitted with a turbocharger is that:",opts:[{t:"greater care must be taken to prevent induction icing than with normally aspirated engines",c:false},{t:"the fuel/air mixture must be leaned to 'best power' for take off",c:false},{t:"throttle movements must be more gradual than with normally aspirated engines",c:true},{t:"the waste-gate must be kept closed during take-off",c:false}]},
-  {q:"Which type of supercharging is commonly used in conjunction with fuel injection systems?",opts:[{t:"Internal supercharging",c:false},{t:"External supercharging",c:true},{t:"Gear-driven supercharging",c:false},{t:"None of these",c:false}]},
-  {q:"Large hydraulic systems require:",opts:[{t:"insulation and a heater as they run very cold",c:false},{t:"none of these",c:true},{t:"a heater as they run very cold",c:false},{t:"a heating coil as they run very cold",c:false}]},
+  {q:"A 747 has just aborted a landing on your active runway. You know you can rotate before the point it aborted (assuming a light aircraft). Do you delay your take off or go without delay?",opts:["No delay, because you will be well clear of the wake turbulence by your takeoff point","No delay, because the 747's wake turbulence only starts at the point where it aborted","Yes delay, because your flight path will be impacted by wake","Yes delay, because the wake turbulence circles upwards"],ans:"c"},
+  {q:"You are climbing at the Vy. Subsequently, you decrease your airspeed slightly. Which of the following is the outcome?",opts:["Both rate of climb and angle of climb will increase","Both rate of climb and angle of climb will decrease","Rate of climb will decrease and angle of climb will increase","Rate of climb will increase and angle of climb will decrease"],ans:"c"},
+  {q:"The aerodynamic centre is located at approximately ____ of the wing chord from front to back.",opts:["28%","25%","33%","50%"],ans:"b"},
+  {q:"Which of the following is the correct times in order for rate turns 1, 2, 3, 4?",opts:["2 mins, 1.5 mins, 1 min, 30 sec","2 mins, 1 min, 40 sec, 30 sec","1 min, 2 min, 3 min, 4 min","4 min, 3 min, 2 min, 1 min"],ans:"a"},
+  {q:"Beyond the stalling angle of a wing:",opts:["lift decreases and drag continues to increase","lift decreases and drag decreases at a higher rate","lift increases and drag increases","lift increases and drag continues to increase at a higher rate"],ans:"a"},
+  {q:"You reduce speed from max cruising speed to max endurance speed; what is the effect on longitudinal stability?",opts:["Decreases","Increases","Remains constant"],ans:"a"},
+  {q:"Design features to offset slip-streaming include:",opts:["offsetting the fin","biasing the rudder","all of these","offsetting the thrustline"],ans:"c"},
+  {q:"The reason for prescribing a maximum structural cruising speed is to:",opts:["limit the stresses resulting from full or abrupt control surface movements","indicate the speed above which structural damage will occur in smooth conditions","indicate the speed above which unacceptable control surface flutter will occur","limit the stresses resulting from the aircraft's gust response characteristics"],ans:"d"},
+  {q:"Once the aircraft goes past its stalling angle of attack, the centre of pressure:",opts:["no longer exists","moves rearward","moves forward","impossible to say"],ans:"b"},
+  {q:"The benefits of a high chord ratio wing is:",opts:["increased MCRIT","smooth stall","sharper stall","decreased MCDR"],ans:"b"},
+  {q:"Close to the ground vortices from large aircraft tend to sink to low levels then:",opts:["none of these","bounce off the ground rising up several hundred feet","dissipate as soon as they hit the ground","bounce off the ground rising to about 700 hundred feet"],ans:"a"},
+  {q:"You are taking off from a parallel runway situation on runway 19L, wind is 10 KT 270° and a 747 has just landed on 19R. In relation to the vortices from the 747 you:",opts:["ought to be very cautious due to the wind direction","need not be too concerned as they are blowing away from your runway","need to be alarmed as they are blowing toward your runway","the wind has no effect on vortices"],ans:"a"},
+  {q:"Ground effect is strongest:",opts:["during the landing phase of flight","immediately after lift-off","during the initial take-off roll","when flying at 50 ft AGL","when flying close to the stalling AOA"],ans:"b"},
+  {q:"A pilot of a light aircraft with a TODR 2000ft takes off on the same runway as a superheavy aircraft with TODR 4750ft in 5kt quartering headwind conditions. The pilot of the light aircraft should?",opts:["Be aware of wake turbulence and stay above the flight path of the super heavy","Be extremely concerned about wake turbulence and abort the takeoff","Be aware of wake turbulence and drift stay below the flight path of the super heavy","Be aware of wake turbulence and drift and stay above the flight path of the super heavy"],ans:"d"},
+  {q:"An aircraft in level flight, with a low angle of attack, will generally be at a higher power setting than the same aircraft when it has a high angle of attack.",opts:["False","True"],ans:"b"},
+  {q:"Maximum endurance can be achieved by flying:",opts:["at the lowest possible RPM","none of these","at the lowest possible altitude","at the lowest possible speed"],ans:"a"},
+  {q:"If an aircraft is descending and thrust is added, but no other control inputs are changed, what will be the result?",opts:["The increased thrust will make the aircraft hold its attitude and increase speed","The increased thrust will make the aircraft pitch up past level flight","None of these","The increased thrust will make the aircraft descend faster at a steeper angle","The increased thrust will reduce the angle of descent"],ans:"e"},
+  {q:"Performance = ?",opts:["power + attitude","power + altitude","power x attitude","power / altitude"],ans:"a"},
+  {q:"The most significant effect on an aeroplane's flight characteristics of NOT clearing frost from the wings prior to flight is that:",opts:["both the indicated stalling speed and stalling angle will be greater","the stalling angle will be higher than normal","there will be a marked deterioration in acceleration during the take-off run","the margin between the take-off safety speed and indicated stalling speed will be less"],ans:"d"},
+  {q:"The benefits of vortex generators include:",opts:["lower lift off speed","lower stall speeds","all of these","improved controllability"],ans:"c"},
+  {q:"If you double the speed in a turn for a given bank angle, you will _______________ the radius.",opts:["quadruple","not change","double","triple","halve"],ans:"a"},
+  {q:"With an IAS of 100 kt and a headwind of 20 kt, the range of an aircraft will be closest to:",opts:["8/12ths of its original range","80% of its original range","Its range will not change, however its fuel consumption will","120% of its original range"],ans:"b"},
+  {q:"The power required whilst turning is greater than that required for level flight at the same IAS and altitude because, in a turn:",opts:["power provides the necessary centripetal force","drag is higher though IAS is the same","the vertical component of lift is less","the stalling speed is higher"],ans:"b"},
+  {q:"In a small (with MTOW < 5700 kg) light aircraft below 10,000 feet which will likely have the most impact on range on most occasions?",opts:["none of these","altitude flown","wind direction and speed","wind direction"],ans:"c"},
+  {q:"Which of the following combination of factors would alter the indicated stalling speed of an aeroplane?",opts:["Power and gross weight","Altitude and load factor","All of these","Density altitude and wing loading","Turbulence and air density"],ans:"c"},
+
+  {q:"A wind shear that causes a drop in IAS is known as a/an:",opts:["non-standard wind shear","undershoot wind shear","overshoot wind shear","standard wind shear"],ans:"b"},
+  {q:"The force acting on an aircraft towards the inside of a turn is known as:",opts:["centrifical","lift","centripetal","centrifugial"],ans:"c"},
+  {q:"An aircraft with a 10 to 1 lift drag ratio would be able to glide approximately ______ nm from 3000 feet AGL.",opts:["10 nm","5 nm","2 nm","8 nm"],ans:"b"},
+  {q:"In high performance aircraft with passengers on board the best rate or angle of climb are:",opts:["used generally only when required","always used","never used","used around 50% of the time"],ans:"a"},
+  {q:"Ground effect occurs due to:",opts:["an increase in the down wash from the wing","an increase in the down wash from the wing and a reduction in induced drag","a decrease in the down wash from the wing and a reduction in induced drag","a decrease in the down wash from the wing"],ans:"d"},
 ];
 
-const LETTERS = ['a','b','c','d','e','f','g'];
-let shuffledOpts = [];
-let questions    = [];
-let userAnswers  = {};
-let wrongSet     = new Set();
-let flagSet      = new Set();
-let mode         = 'all';
+const LETTERS=['a','b','c','d','e','f','g'];
+const SAVE_KEY='reference_template_v2';
+let questions=[],userAnswers={};
+let wrongSet=new Set(),flagSet=new Set();
+let mode='all',isLAM=true,lamRevealed=false;
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function saveState(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({userAnswers,wrongSet:[...wrongSet],flagSet:[...flagSet],mode,isLAM,lamRevealed,ts:Date.now()}));}catch(e){}}
+function loadState(){try{const r=localStorage.getItem(SAVE_KEY);if(!r)return false;const s=JSON.parse(r);userAnswers=s.userAnswers||{};wrongSet=new Set(s.wrongSet||[]);flagSet=new Set(s.flagSet||[]);mode=s.mode||'all';isLAM=s.isLAM!==undefined?s.isLAM:true;lamRevealed=!!s.lamRevealed;return true;}catch(e){return false;}}
+function clearSave(){try{localStorage.removeItem(SAVE_KEY);}catch(e){}}
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function toggleAnswerMode(){
+  isLAM=!isLAM;
+  document.getElementById('lamToggle').classList.toggle('on',isLAM);
+  document.getElementById('amDesc').innerHTML=isLAM
+    ?'<strong>LAM</strong> — select all answers, then check at the end'
+    :'<strong>IAM</strong> — answers revealed instantly after each pick';
+  resetQuiz();
 }
 
-function buildQuestions() {
-  if      (mode === 'shuffle') questions = [...RAW].sort(() => Math.random() - 0.5);
-  else if (mode === 'wrong')   questions = RAW.filter((_,i) => wrongSet.has(i));
-  else if (mode === 'flagged') questions = RAW.filter((_,i) => flagSet.has(i));
-  else                         questions = [...RAW];
+function buildQuestions(){
+  if(mode==='shuffle') questions=[...RAW].sort(()=>Math.random()-0.5);
+  else if(mode==='wrong') questions=RAW.filter((_,i)=>wrongSet.has(i));
+  else if(mode==='flagged') questions=RAW.filter((_,i)=>flagSet.has(i));
+  else questions=[...RAW];
 }
 
-function setMode(m) {
-  mode = m;
-  document.querySelectorAll('.mode-btn').forEach((b,i) =>
-    b.classList.toggle('active', ['all','shuffle','wrong','flagged'][i] === m));
-  document.getElementById('modeLabel').textContent =
-    {all:'All Questions', shuffle:'Shuffled', wrong:'Wrong Only', flagged:'🚩 Flagged'}[m];
-  userAnswers = {};
-  buildQuestions(); renderAll(); updateStats();
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('active',['all','shuffle','wrong','flagged'][i]===m));
+  document.getElementById('modeLabel').textContent={all:'All Questions',shuffle:'Shuffled',wrong:'Wrong Only',flagged:'🚩 Flagged'}[m];
+  userAnswers={};lamRevealed=false;buildQuestions();renderAll();updateStats();saveState();
 }
 
-function resetQuiz() {
-  wrongSet.clear(); flagSet.clear(); userAnswers = {}; mode = 'all';
-  shuffledOpts = RAW.map(q => shuffle(q.opts));
-  document.querySelectorAll('.mode-btn').forEach((b,i) => b.classList.toggle('active', i===0));
-  document.getElementById('modeLabel').textContent = 'All Questions';
-  document.getElementById('results').style.display = 'none';
-  buildQuestions(); renderAll(); updateStats();
+function resetQuiz(){
+  wrongSet.clear();flagSet.clear();userAnswers={};lamRevealed=false;mode='all';
+  document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('modeLabel').textContent='All Questions';
+  document.getElementById('results').style.display='none';
+  document.getElementById('lamToggle').classList.toggle('on',isLAM);
+  document.getElementById('amDesc').innerHTML=isLAM
+    ?'<strong>LAM</strong> — select all answers, then check at the end'
+    :'<strong>IAM</strong> — answers revealed instantly after each pick';
+  buildQuestions();renderAll();updateStats();clearSave();
 }
 
-function jumpTo(val) {
-  if (!val) return;
-  document.getElementById('q-'+val)?.scrollIntoView({behavior:'smooth', block:'start'});
-  document.getElementById('jumpSelect').value = '';
-}
+function jumpTo(val){if(!val)return;document.getElementById('q-'+val)?.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('jumpSelect').value='';}
 
-function renderAll() {
-  const area = document.getElementById('quizArea');
-  const jump = document.getElementById('jumpSelect');
-  area.innerHTML = '';
-  jump.innerHTML = '<option value="">— Q# —</option>';
+function renderAll(){
+  const area=document.getElementById('quizArea');
+  const jump=document.getElementById('jumpSelect');
+  area.innerHTML='';jump.innerHTML='<option value="">— Q# —</option>';
+  document.getElementById('lamCheckWrap').classList.toggle('visible',isLAM);
 
-  if (questions.length === 0) {
-    area.innerHTML = `<div class="empty-state">
-      <div class="icon">${mode==='flagged'?'🚩':'✓'}</div>
-      <h3>${mode==='flagged'?'No flagged questions yet':'Nothing here'}</h3>
-      <p>${mode==='flagged'
-        ? 'Tap the 🚩 icon on any question to flag it for review.'
-        : 'You have not answered any questions incorrectly — well done.'}</p>
-    </div>`;
-    return;
+  if(questions.length===0){
+    area.innerHTML=`<div class="empty-state"><div class="icon">${mode==='flagged'?'🚩':'✓'}</div><h3>${mode==='flagged'?'No flagged questions yet':'Nothing here'}</h3><p>${mode==='flagged'?'Tap the 🚩 icon on any question to flag it for review.':'You have not answered any questions incorrectly — well done.'}</p></div>`;
+    updateLAMButton();renderGuide();if(typeof updateFloatJump==='function')updateFloatJump();return;
   }
 
-  questions.forEach((q, idx) => {
-    const rawIdx    = RAW.indexOf(q);
-    const isFlagged = flagSet.has(rawIdx);
-    jump.innerHTML += `<option value="${idx}">Q${rawIdx+1}</option>`;
-
-    const card = document.createElement('div');
-    card.className = 'card' + (isFlagged ? ' flagged-card' : '');
-    card.id = 'q-' + idx;
-    card.style.animationDelay = Math.min(idx * 15, 120) + 'ms';
-
-    const opts     = shuffledOpts[rawIdx];
-    const optsHTML = opts.map((opt, oi) => {
-      const letter = LETTERS[oi];
-      return `<button class="opt" id="opt-${idx}-${letter}" onclick="choose(${idx},'${letter}')">
-        <span class="opt-letter">${letter}</span><span>${opt.t}</span>
-      </button>`;
+  questions.forEach((q,idx)=>{
+    const rawIdx=RAW.indexOf(q),isFlagged=flagSet.has(rawIdx);
+    jump.innerHTML+=`<option value="${idx}">Q${rawIdx+1}</option>`;
+    const card=document.createElement('div');
+    card.className='card'+(isFlagged?' flagged-card':'');
+    card.id='q-'+idx;
+    card.style.animationDelay='0ms';
+    const optsHTML=q.opts.map((opt,oi)=>{
+      const l=LETTERS[oi];
+      return`<button class="opt" id="opt-${idx}-${l}" onclick="choose(${idx},'${l}')"><span class="opt-letter">${l}</span><span>${opt}</span></button>`;
     }).join('');
-
-    card.innerHTML = `
-      <div class="card-header">
-        <span class="q-num">Q${rawIdx+1}</span>
-        <span class="q-text">${q.q}</span>
-        <button class="flag-btn${isFlagged?' flagged':''}" id="flag-${idx}"
-          onclick="toggleFlag(${idx})" title="${isFlagged?'Unflag':'Flag for review'}">🚩</button>
-      </div>
-      <div class="options">${optsHTML}</div>
-      <div class="feedback" id="fb-${idx}"></div>
-    `;
+    card.innerHTML=`<div class="card-header"><span class="q-num">Q${rawIdx+1}</span><span class="q-text">${q.q}</span><button class="flag-btn${isFlagged?' flagged':''}" id="flag-${idx}" onclick="toggleFlag(${idx})" title="${isFlagged?'Unflag':'Flag for review'}">🚩</button></div><div class="options">${optsHTML}</div><div class="feedback" id="fb-${idx}"></div>`;
     area.appendChild(card);
-    if (userAnswers[idx] !== undefined) applyAnswer(idx, userAnswers[idx], false);
+    if(userAnswers[idx]!==undefined){
+      if(isLAM&&!lamRevealed) applyLAMSelect(idx,userAnswers[idx]);
+      else applyAnswer(idx,userAnswers[idx],false);
+    }
   });
+  updateLAMButton();renderGuide();
+  if(typeof updateFloatJump==='function')updateFloatJump();
 }
 
-function toggleFlag(idx) {
-  const rawIdx = RAW.indexOf(questions[idx]);
-  const btn  = document.getElementById('flag-' + idx);
-  const card = document.getElementById('q-' + idx);
-  if (flagSet.has(rawIdx)) {
-    flagSet.delete(rawIdx); btn.classList.remove('flagged'); card.classList.remove('flagged-card'); btn.title='Flag for review';
-  } else {
-    flagSet.add(rawIdx); btn.classList.add('flagged'); card.classList.add('flagged-card'); btn.title='Unflag';
+function toggleFlag(idx){
+  const rawIdx=RAW.indexOf(questions[idx]);
+  const btn=document.getElementById('flag-'+idx),card=document.getElementById('q-'+idx);
+  if(flagSet.has(rawIdx)){flagSet.delete(rawIdx);btn.classList.remove('flagged');card.classList.remove('flagged-card');btn.title='Flag for review';}
+  else{flagSet.add(rawIdx);btn.classList.add('flagged');card.classList.add('flagged-card');btn.title='Unflag';}
+  updateStats();updateGuide();saveState();
+}
+
+function choose(idx,letter){
+  if(isLAM){
+    if(lamRevealed)return;
+    userAnswers[idx]=letter;
+    applyLAMSelect(idx,letter);
+    updateStats();updateLAMButton();updateGuide();saveState();
+  }else{
+    if(userAnswers[idx]!==undefined)return;
+    userAnswers[idx]=letter;
+    const rawIdx=RAW.indexOf(questions[idx]);
+    if(letter!==questions[idx].ans) wrongSet.add(rawIdx);
+    applyAnswer(idx,letter,true);updateStats();saveState();
   }
-  updateStats();
 }
 
-function choose(idx, letter) {
-  if (userAnswers[idx] !== undefined) return;
-  userAnswers[idx] = letter;
-  const rawIdx    = RAW.indexOf(questions[idx]);
-  const chosenOpt = shuffledOpts[rawIdx][LETTERS.indexOf(letter)];
-  if (!chosenOpt.c) wrongSet.add(rawIdx);
-  applyAnswer(idx, letter, true);
-  updateStats();
+function applyLAMSelect(idx,letter){
+  const q=questions[idx];
+  q.opts.forEach((_,oi)=>{const b=document.getElementById(`opt-${idx}-${LETTERS[oi]}`);if(b)b.classList.remove('lam-selected');});
+  const btn=document.getElementById(`opt-${idx}-${letter}`);
+  if(btn)btn.classList.add('lam-selected');
 }
 
-function applyAnswer(idx, letter, animate) {
-  const rawIdx   = RAW.indexOf(questions[idx]);
-  const opts     = shuffledOpts[rawIdx];
-  const chosenOi = LETTERS.indexOf(letter);
-  const correct  = opts[chosenOi]?.c === true;
-
-  opts.forEach((_, oi) => {
-    const b = document.getElementById(`opt-${idx}-${LETTERS[oi]}`);
-    if (b) b.disabled = true;
+function lamRevealAll(){
+  lamRevealed=true;wrongSet.clear();
+  questions.forEach((q,idx)=>{
+    const rawIdx=RAW.indexOf(q),letter=userAnswers[idx];
+    if(letter===undefined)return;
+    q.opts.forEach((_,oi)=>{const b=document.getElementById(`opt-${idx}-${LETTERS[oi]}`);if(b){b.classList.remove('lam-selected');b.disabled=true;}});
+    const correct=letter===q.ans;
+    if(!correct)wrongSet.add(rawIdx);
+    const cb=document.getElementById(`opt-${idx}-${letter}`);if(cb)cb.classList.add(correct?'correct-ans':'wrong-ans');
+    if(!correct){const ci=LETTERS.indexOf(q.ans);const crb=document.getElementById(`opt-${idx}-${LETTERS[ci]}`);if(crb)crb.classList.add('revealed-correct');}
+    const fb=document.getElementById('fb-'+idx);
+    if(fb){
+      const cl=q.ans.toUpperCase();
+      fb.className='feedback '+(correct?'ok':'bad');
+      fb.innerHTML=correct?'✓ Correct!':`✗ Incorrect — correct answer: <strong>${cl}</strong>`;
+      setTimeout(()=>fb.classList.add('show'),idx*55);
+    }
   });
+  updateStats();updateLAMButton();updateGuide();saveState();
+  document.getElementById('quizArea')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-  const chosenBtn = document.getElementById(`opt-${idx}-${letter}`);
-  if (chosenBtn) chosenBtn.classList.add(correct ? 'correct-ans' : 'wrong-ans');
-
-  if (!correct) {
-    const corrOi  = opts.findIndex(o => o.c);
-    const corrBtn = document.getElementById(`opt-${idx}-${LETTERS[corrOi]}`);
-    if (corrBtn) corrBtn.classList.add('revealed-correct');
-  }
-
-  const fb = document.getElementById('fb-' + idx);
-  if (fb) {
-    const corrOi   = opts.findIndex(o => o.c);
-    const corrLett = LETTERS[corrOi].toUpperCase();
-    fb.className   = 'feedback ' + (correct ? 'ok' : 'bad');
-    fb.innerHTML   = correct ? '✓ Correct!' : `✗ Incorrect — correct answer: <strong>${corrLett}</strong>`;
-    if (animate) requestAnimationFrame(() => requestAnimationFrame(() => fb.classList.add('show')));
+function applyAnswer(idx,letter,animate){
+  const q=questions[idx];
+  const correct=letter===q.ans;
+  q.opts.forEach((_,oi)=>{const b=document.getElementById(`opt-${idx}-${LETTERS[oi]}`);if(b)b.disabled=true;});
+  const cb=document.getElementById(`opt-${idx}-${letter}`);if(cb)cb.classList.add(correct?'correct-ans':'wrong-ans');
+  if(!correct){const ci=LETTERS.indexOf(q.ans);const crb=document.getElementById(`opt-${idx}-${LETTERS[ci]}`);if(crb)crb.classList.add('revealed-correct');}
+  const fb=document.getElementById('fb-'+idx);
+  if(fb){
+    const cl=q.ans.toUpperCase();
+    fb.className='feedback '+(correct?'ok':'bad');
+    fb.innerHTML=correct?'✓ Correct!':`✗ Incorrect — correct answer: <strong>${cl}</strong>`;
+    if(animate)requestAnimationFrame(()=>requestAnimationFrame(()=>fb.classList.add('show')));
     else fb.classList.add('show');
   }
 }
 
-function popVal(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+function renderGuide(){
+  const guide=document.getElementById('lamGuide');
+  const grid=document.getElementById('lamGuideGrid');
+  guide.classList.toggle('visible',isLAM);
+  if(!isLAM){grid.innerHTML='';return;}
+  grid.innerHTML='';
+  questions.forEach((q,idx)=>{
+    const rawIdx=RAW.indexOf(q);
+    const btn=document.createElement('button');
+    btn.className='lam-guide-btn';
+    btn.id='gb-'+idx;
+    btn.onclick=()=>document.getElementById('q-'+idx)?.scrollIntoView({behavior:'smooth',block:'start'});
+    grid.appendChild(btn);
+  });
+  updateGuide();
 }
 
-function updateStats() {
-  const total    = questions.length;
-  const answered = Object.keys(userAnswers).length;
-  let correct = 0;
-  Object.entries(userAnswers).forEach(([i, letter]) => {
-    const rawIdx = RAW.indexOf(questions[+i]);
-    const oi = LETTERS.indexOf(letter);
-    if (shuffledOpts[rawIdx]?.[oi]?.c) correct++;
+function updateGuide(){
+  if(!isLAM)return;
+  questions.forEach((q,idx)=>{
+    const rawIdx=RAW.indexOf(q);
+    const btn=document.getElementById('gb-'+idx);
+    if(!btn)return;
+    const isFlagged=flagSet.has(rawIdx);
+    const letter=userAnswers[idx];
+    const flagIcon=isFlagged?'<span class="gb-flag">🚩</span>':'';
+    let stateClass='gb-unanswered', stateIcon='';
+    if(lamRevealed&&letter!==undefined){
+      const correct=letter===q.ans;
+      stateClass=correct?'gb-correct':'gb-wrong';
+      stateIcon=correct?'✓':'✗';
+    } else if(letter!==undefined){
+      stateClass='gb-selected';stateIcon='·';
+    }
+    btn.className='lam-guide-btn '+stateClass;
+    btn.innerHTML=`${stateIcon?`<span>${stateIcon}</span>`:''}Q${rawIdx+1}${flagIcon}`;
   });
-  const pct = total ? Math.round(answered/total*100) : 0;
-  const nC=correct, nW=answered-correct, nF=flagSet.size, nR=total-answered;
-  if (document.getElementById('statCorrect').textContent !== String(nC)) popVal('statCorrect');
-  if (document.getElementById('statWrong').textContent   !== String(nW)) popVal('statWrong');
-  if (document.getElementById('statFlagged').textContent !== String(nF)) popVal('statFlagged');
-  if (document.getElementById('statRemain').textContent  !== String(nR)) popVal('statRemain');
-  document.getElementById('statCorrect').textContent = nC;
-  document.getElementById('statWrong').textContent   = nW;
-  document.getElementById('statFlagged').textContent = nF;
-  document.getElementById('statRemain').textContent  = nR;
-  document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('progText').textContent    = `${answered} / ${total} answered`;
-  document.getElementById('progPct').textContent     = pct + '%';
 }
 
-function showResults() {
-  const total    = questions.length;
-  const answered = Object.keys(userAnswers).length;
-  if (!answered) { alert('Answer some questions first!'); return; }
-  let correct = 0;
-  Object.entries(userAnswers).forEach(([i, letter]) => {
-    const rawIdx = RAW.indexOf(questions[+i]);
-    const oi = LETTERS.indexOf(letter);
-    if (shuffledOpts[rawIdx]?.[oi]?.c) correct++;
-  });
-  const pct = Math.round(correct/total*100);
-  const el  = document.getElementById('results');
-  el.style.display = 'block';
-  el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
-  document.getElementById('resTitle').textContent  = pct >= 70 ? '🎉 Well Done!' : 'Keep Studying';
-  document.getElementById('resPct').textContent    = pct + '%';
-  document.getElementById('resPct').className      = 'score-big ' + (pct >= 70 ? 'pass' : 'fail');
-  document.getElementById('resDetail').textContent = `${correct} correct out of ${answered} answered (${total} total questions)`;
+function updateLAMButton(){
+  if(!isLAM)return;
+  const total=questions.length,answered=Object.keys(userAnswers).length;
+  const btn=document.getElementById('lamCheckBtn'),note=document.getElementById('lamNote');
+  if(lamRevealed){btn.disabled=true;btn.textContent='✓ Answers Revealed';note.textContent='Reset to try again';}
+  else if(answered>=total&&total>0){btn.disabled=false;btn.textContent='Check Answers';note.textContent=`All ${total} questions selected — ready!`;}
+  else{btn.disabled=true;btn.textContent='Check Answers';note.textContent=`${answered} / ${total} selected — answer all to unlock`;}
+}
+
+function popVal(id){const el=document.getElementById(id);if(!el)return;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');}
+
+function updateStats(){
+  const total=questions.length,answered=Object.keys(userAnswers).length;
+  let correct=0;
+  if(!isLAM||lamRevealed){Object.entries(userAnswers).forEach(([i,letter])=>{if(letter===questions[+i].ans)correct++;});}
+  const pct=total?Math.round(answered/total*100):0;
+  const nC=(!isLAM||lamRevealed)?correct:0;
+  const nW=(!isLAM||lamRevealed)?answered-correct:0;
+  const nF=flagSet.size,nR=total-answered;
+  if(document.getElementById('statCorrect').textContent!==String(nC))popVal('statCorrect');
+  if(document.getElementById('statWrong').textContent!==String(nW))popVal('statWrong');
+  if(document.getElementById('statFlagged').textContent!==String(nF))popVal('statFlagged');
+  if(document.getElementById('statRemain').textContent!==String(nR))popVal('statRemain');
+  document.getElementById('statCorrect').textContent=nC;
+  document.getElementById('statWrong').textContent=nW;
+  document.getElementById('statFlagged').textContent=nF;
+  document.getElementById('statRemain').textContent=nR;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progText').textContent=(isLAM&&!lamRevealed)?`${answered} / ${total} selected`:`${answered} / ${total} answered`;
+  document.getElementById('progPct').textContent=pct+'%';
+}
+
+function showResults(){
+  const total=questions.length,answered=Object.keys(userAnswers).length;
+  if(!answered){alert('Answer some questions first!');return;}
+  if(isLAM&&!lamRevealed){alert('Press "Check Answers" first to reveal your results!');return;}
+  let correct=0;
+  Object.entries(userAnswers).forEach(([i,letter])=>{if(letter===questions[+i].ans)correct++;});
+  const pct=Math.round(correct/total*100);
+  const el=document.getElementById('results');
+  el.style.display='block';el.style.animation='none';void el.offsetWidth;el.style.animation='';
+  document.getElementById('resTitle').textContent=pct>=70?'🎉 Well Done!':'Keep Studying';
+  document.getElementById('resPct').textContent=pct+'%';
+  document.getElementById('resPct').className='score-big '+(pct>=70?'pass':'fail');
+  document.getElementById('resDetail').textContent=`${correct} correct out of ${answered} answered (${total} total questions)`;
   el.scrollIntoView({behavior:'smooth'});
 }
 
-resetQuiz();
+function initQuiz(){
+  const restored=loadState();
+  if(restored&&Object.keys(userAnswers).length>0){
+    document.getElementById('lamToggle').classList.toggle('on',isLAM);
+    document.getElementById('amDesc').innerHTML=isLAM
+      ?'<strong>LAM</strong> — select all answers, then check at the end'
+      :'<strong>IAM</strong> — answers revealed instantly after each pick';
+    document.querySelectorAll('.mode-btn').forEach((b,i)=>b.classList.toggle('active',['all','shuffle','wrong','flagged'][i]===mode));
+    document.getElementById('modeLabel').textContent={all:'All Questions',shuffle:'Shuffled',wrong:'Wrong Only',flagged:'🚩 Flagged'}[mode];
+    buildQuestions();renderAll();updateStats();
+  } else {
+    resetQuiz();
+  }
+}
+
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initQuiz);}
+else{initQuiz();}
+
+/* Floating jump button (LAM only) */
+let floatReturnY=null;
+function floatJumpClick(){
+  const btn=document.getElementById('floatJump');
+  if(btn.dataset.dir==='up'){
+    // return to remembered position
+    if(floatReturnY!==null){window.scrollTo({top:floatReturnY,behavior:'smooth'});}
+    floatReturnY=null;
+  }else{
+    // remember current scroll, jump to guide
+    floatReturnY=window.scrollY;
+    const guide=document.getElementById('lamGuide');
+    if(guide)guide.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+function updateFloatJump(){
+  const btn=document.getElementById('floatJump');
+  if(!btn)return;
+  // visible only in LAM with questions
+  if(!isLAM||questions.length===0){btn.classList.remove('visible');return;}
+  btn.classList.add('visible');
+  // detect "at bottom" — within 200px of page bottom
+  const nearBottom=(window.innerHeight+window.scrollY)>=(document.body.offsetHeight-200);
+  if(nearBottom){btn.dataset.dir='up';btn.textContent='↑';btn.title='Return to where you were';}
+  else{btn.dataset.dir='down';btn.textContent='↓';btn.title='Jump to question list';}
+}
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('progressWrap').classList.toggle('scrolled',window.scrollY>80);
+  updateFloatJump();
+},{passive:true});
 </script>
 </body>
 </html>
